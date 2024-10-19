@@ -4,20 +4,26 @@ import os
 # This function simulates the model, once, with the given parameters, by executing through a shell command.
 # It reads the results by calling the readMat function and displays a graph of the Temperature versus Time by calling the plotData function
 # This function takes parameter values of the newtonCoolingWithTypes model.
-def singleSimulation(wd, plotX, plotY, m=0.2, M=10, r=1, dp=0.5, dc=2):
+def singleSimulation(wd, exec, vars: dict[str, float]) -> dict[str, float]:
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
-    simulationCommand='./pendulum -override m='+str(m)+',M='+str(M)+',r='+str(r)+',dp='+str(dp)+',dc='+str(dc)
+    simulationCommand='./'+str(exec)+' -override '
+    i = 0
+    for var, val in vars.items():
+        if i != 0:
+            simulationCommand += ", "
+        simulationCommand += var + '=' + str(val)
+        i += 1
     # Assuming that your shell is focused on the example/ directory, you should change directory to the one actually containing the executable. This directory usually has the same name as the Modelica file name.
     # Create the corresponding string command and execute it.
     os.chdir(wd)
     # Simulate the model
     os.system(simulationCommand)
     # Obtain the variable values by reading the MAT-file
-    values = readMat('pendulum_res.mat')
+    values = readMat(str(exec)+'_res.mat')
     mapping = {var: val for var, val in zip(values[0], values[1])}
-    # Create a plot of the Temperature over time in the simulation
-    openDataPlot(mapping[plotX], mapping[plotY], plotX, plotY)
+    os.chdir("../..")
+    return mapping
 
 # You need scipy package to read MAT-files
 from scipy import io
@@ -74,7 +80,7 @@ def openDataPlot(xdata, ydata, xLabel, yLabel):
 # "function" that calls the single simulation function from shell. In your code, this function call should be in a loop ove the combinations of parameters.
 if __name__ == "__main__":
     wd = "pendulum/Assignment1.pendulum"
-    singleSimulation(wd, "time", "ohm")
+    singleSimulation(wd, "pendulum", "time", "ohm")
 
 # The follwing function is an alternative way of executing/simulating the Modelica model using the OMPython package. This method is not recommended.
 # from OMPython import OMCSessionZMQ, ModelicaSystem
