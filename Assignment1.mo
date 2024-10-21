@@ -7,8 +7,8 @@ package Assignment1
     parameter Modelica.Units.SI.Mass m = 0.2;
     parameter Modelica.Units.SI.Mass M = 10;
     parameter Modelica.Units.SI.Length r = 1;
-    parameter Factor dp = 0.5;
-    parameter Factor dc = 2;
+    parameter Factor dp = 0.12;
+    parameter Factor dc = 4.79;
     constant Modelica.Units.SI.Acceleration g = 9.80665;
     // Variables
     Modelica.Units.SI.Length x;
@@ -25,7 +25,7 @@ package Assignment1
     
     
     equation
-    if time < 0.5 then u = 1000; else u = 0; end if;
+    if time < 0.5 then u = 100; else u = 0; end if;
     
     der(x) = v;
     der(th) = ohm;
@@ -64,12 +64,13 @@ package Assignment1
     parameter Modelica.Units.SI.Length r = 1;
     parameter Factor dp = 0.5;
     constant Modelica.Units.SI.Acceleration g = 9.80665;
+  
     // Variables
     Modelica.Units.SI.Angle th;
     Modelica.Units.SI.AngularVelocity ohm;
     
     initial equation
-      th=30;
+      th=Modelica.Constants.pi/6;
       ohm=0;
     
     

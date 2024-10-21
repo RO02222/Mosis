@@ -94,11 +94,7 @@ def animate_gantry_system(x_array, theta_array, length=1, interval=1):
 
 # Example usage:
 if __name__ == '__main__':
-    # Sample data for x and theta
-    t = np.linspace(0, 10, 200)
-    x = 2 * np.sin(0.5 * t)  # Example cart positions
-    theta = 0.2 * np.sin(2 * t)  # Example pendulum angles (in radians)
     # Call the animation function with sample data
-    values = readMat("pendulum_res.mat")
+    values = readMat("pendulum/Assignment1.pendulum/pendulum_res.mat")
     mapping = {var: val for var, val in zip(values[0], values[1])}
-    animate_gantry_system(mapping["x"][0:50], mapping["th"][0:50], length=5, interval=200)
+    animate_gantry_system(mapping["x"], mapping["th"], length=1, interval=1)
