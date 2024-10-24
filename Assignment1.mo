@@ -3,17 +3,17 @@ package Assignment1
     // Types
     type Factor = Real(unit = "");
     // Parameters
-    parameter Modelica.Units.SI.Mass m = 0.2;
-    parameter Modelica.Units.SI.Mass M = 10;
-    parameter Modelica.Units.SI.Length r = 1;
-    parameter Factor dp = 0.12;
-    parameter Factor dc = 4.79;
-    constant Modelica.Units.SI.Acceleration g = 9.80665;
+    parameter Modelica.Units.SI.Mass m = 0.2; // Mass of the pendulum, (kg)
+    parameter Modelica.Units.SI.Mass M = 10;  // Mass of the cart, (kg)
+    parameter Modelica.Units.SI.Length r = 1; // Length of rope, (m)
+    parameter Factor dp = 0.12; // Damping factor of the pendulum, no unit
+    parameter Factor dc = 4.79; // Damping factor of the cart, no unit
+    constant Modelica.Units.SI.Acceleration g = 9.80665; // Gravitational acceleration on Earth, (m/(s^2))
     // Variables
-    Modelica.Units.SI.Length x;
-    Modelica.Units.SI.Velocity v;
-    Modelica.Units.SI.Angle th;
-    Modelica.Units.SI.AngularVelocity ohm;
+    Modelica.Units.SI.Length x; // displacement of the cart, (m)
+    Modelica.Units.SI.Velocity v; // Velocity of the cart, (m/s)
+    Modelica.Units.SI.Angle th; // Angular displacement of the pendulum, (rad)
+    Modelica.Units.SI.AngularVelocity ohm; // Angular velocity of the pendulum, (rad/s)
     Real u;
   initial equation
     u = 0;
@@ -32,11 +32,11 @@ package Assignment1
     //Types
     type Factor = Real(unit = "");
     // Parameters
-    parameter Modelica.Units.SI.Mass M = 10;
-    parameter Factor dc = 2;
+    parameter Modelica.Units.SI.Mass M = 10; // Mass of the cart, (kg)
+    parameter Factor dc = 4.79; // Damping factor of the cart, no unit
     // Variables
-    Modelica.Units.SI.Length x;
-    Modelica.Units.SI.Velocity v;
+    Modelica.Units.SI.Length x; // displacement of the cart, (m)
+    Modelica.Units.SI.Velocity v; // Velocity of the cart, (m/s)
   initial equation
     x = 0;
     v = 5;
@@ -49,13 +49,14 @@ package Assignment1
     // Types
     type Factor = Real(unit = "");
     // Parameters
-    parameter Modelica.Units.SI.Mass m = 0.2;
-    parameter Modelica.Units.SI.Length r = 1;
-    parameter Factor dp = 0.5;
-    constant Modelica.Units.SI.Acceleration g = 9.80665;
+    parameter Modelica.Units.SI.Mass m = 0.2; // Mass of the pendulum, (kg)
+    parameter Modelica.Units.SI.Length r = 1; // Length of rope, (m)
+    parameter Factor dp = 0.12; // Damping factor of the pendulum, no unit
+    constant Modelica.Units.SI.Acceleration g = 9.80665; // Gravitational acceleration on Earth, (m/(s^2))
+  
     // Variables
-    Modelica.Units.SI.Angle th;
-    Modelica.Units.SI.AngularVelocity ohm;
+    Modelica.Units.SI.Angle th; // Angular displacement of the pendulum, (rad)
+    Modelica.Units.SI.AngularVelocity ohm; // Angular velocity of the pendulum, (rad/s)
   initial equation
     th = Modelica.Constants.pi/6;
     ohm = 0;
@@ -77,9 +78,9 @@ package Assignment1
   end plant;
 
   block pid
-    parameter Real kp = 7;
-    parameter Real ki = 0;
-    parameter Real kd = 10;
+    parameter Real kp = 7; //Proportional gain for the PID controller, no unit
+    parameter Real ki = 0; //Integral gain for the PID controller, no unit
+    parameter Real kd = 10; //Derivate gain for the PID controller, no unit
   Modelica.Blocks.Sources.Constant const(k = kp)  annotation(
       Placement(transformation(origin = {-30, 90}, extent = {{-10, -10}, {10, 10}})));
   Modelica.Blocks.Math.Product product2 annotation(
