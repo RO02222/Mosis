@@ -7,11 +7,11 @@ import os
 def singleSimulation(wd, exec, vars: dict[str, float]) -> dict[str, float]:
     # Create the string command that will be executed to execute the Modelica model
     # The command is structured as './<executable name> -override <param1 name>=<param1 value>, <param2 name>=<param2 value>..'
-    simulationCommand='./'+str(exec)+' -override '
+    simulationCommand='./'+str(exec)+' -override='
     i = 0
     for var, val in vars.items():
         if i != 0:
-            simulationCommand += ", "
+            simulationCommand += ","
         simulationCommand += var + '=' + str(val)
         i += 1
     # Assuming that your shell is focused on the example/ directory, you should change directory to the one actually containing the executable. This directory usually has the same name as the Modelica file name.

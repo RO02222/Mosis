@@ -5,11 +5,13 @@ from matplotlib import pyplot
 import os
 
 def compute_vals(param: str):
+    # If results already generated return
     if os.path.exists(param + "_results"):
         return
     os.mkdir(param + "_results")
     data = pd.read_csv("calibration_data_" + param[0] + "_" + param[1] + ".csv", names=["measured"])
     data = data.drop(index=data.index[0], axis=0)
+    # For each possible value simulate & store alongside measured values
     for val in np.arange(0, 5, 0.01).round(2):
         if val == 0:
             continue
@@ -23,6 +25,9 @@ def compute_vals(param: str):
         data.to_csv(param + "_results/" + param + "_" + str(val))
 
 def sum_of_squared_errors(param: str):
+    # Loops through all values of param and calculates
+    # sum of squared errors for each one
+    # => smallest one is considered best
     os.chdir(param + "_results")
     min = float("+inf")
     best = 0.01
