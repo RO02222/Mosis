@@ -3,8 +3,80 @@ from pyCBD.lib.std import *
 from pyCBD.simulator import Simulator
 from matplotlib import pyplot as plt
 
-class FunctionGBlock(CBD):
+class BackwardEulerIntegrator(CBD):
+	def __init__(self, name="BackwardEulerIntegrator"):
+		CBD.__init__(self, name, ["IN1", "IC"], ["OUT1"])
+		self.addBlock(DeltaTBlock("deltaT"))
+		self.addBlock(ConstantBlock("zero", 0))
+		self.addBlock(DelayBlock("delay1"))
+		self.addBlock(DelayBlock("delay2"))
+		self.addBlock(ProductBlock("multDelta"))
+		self.addBlock(AdderBlock("I"))
 
+		self.addConnection("zero", "delay1", input_port_name="IC")
+		self.addConnection("IN1", "delay1", input_port_name="IN1")
+		self.addConnection("delay1", "multDelta")
+		self.addConnection("deltaT", "multDelta")
+		self.addConnection("multDelta", "I")
+
+		self.addConnection("IC", "delay2", input_port_name="IC")
+		self.addConnection("delay2", "I")
+
+		self.addConnection("I", "delay2", input_port_name="IN1")
+
+		self.addConnection("I", "OUT1")
+
+class ForwardEulerIntegrator(CBD):
+	def __init__(self, name="BackwardEulerIntegrator"):
+		CBD.__init__(self, name, ["IN1", "IC"], ["OUT1"])
+		self.addBlock(DeltaTBlock("deltaT"))
+		self.addBlock(DelayBlock("delay"))
+		self.addBlock(ProductBlock("multDelta"))
+		self.addBlock(AdderBlock("I"))
+
+		self.addConnection("IN1", "multDelta")
+		self.addConnection("deltaT", "multDelta")
+		self.addConnection("multDelta", "I")
+
+		self.addConnection("IC", "delay", input_port_name="IC")
+		self.addConnection("delay", "I")
+		self.addConnection("I", "delay", input_port_name="IN1")
+
+		self.addConnection("I", "OUT1")
+
+class TrapezoidIntegrator(CBD):
+	def __init__(self, name="TrapezoidIntegrator"):
+		CBD.__init__(self, name, ["IN1", "IC"], ["OUT1"])
+		self.addBlock(DelayBlock("delay1"))
+		self.addBlock(DelayBlock("delay2"))
+		self.addBlock(AdderBlock("sum"))
+		self.addBlock(ConstantBlock("zero", value=0))
+		self.addBlock(ConstantBlock("half", value=0.5))
+		self.addBlock(DeltaTBlock("deltaT"))
+		self.addBlock(ProductBlock("halfDelta"))
+		self.addBlock(ProductBlock("multDelta"))
+		self.addBlock(AdderBlock("I"))
+
+		self.addConnection("IN1", "delay1", input_port_name="IN1")
+		self.addConnection("zero", "delay1", input_port_name="IC")
+
+		self.addConnection("IN1", "sum")
+		self.addConnection("delay1", "sum")
+
+		self.addConnection("half", "halfDelta")
+		self.addConnection("deltaT","halfDelta")
+
+		self.addConnection("sum", "multDelta")
+		self.addConnection("halfDelta", "multDelta")
+
+		self.addConnection("multDelta", "I")
+		self.addConnection("delay2", "I")
+		self.addConnection("I", "delay2", input_port_name="IN1")
+		self.addConnection("IC", "delay2", input_port_name="IC")
+
+		self.addConnection("I", "OUT1")
+
+class FunctionGBlock(CBD):
 	def __init__(self, name="FunctionG"):
 		CBD.__init__(self, name, ["t"], ["g"])
 		self.addBlock(ConstantBlock(block_name="Three", value=3))
@@ -34,7 +106,7 @@ class system(CBD):
 		CBD.__init__(self, name, output_ports=["OUT"])
 		self.addBlock(FunctionGBlock())
 		self.addBlock(TimeBlock("time"))
-		self.addBlock(IntegratorBlock("euler"))
+		self.addBlock(TrapezoidIntegrator("euler"))
 		self.addBlock(ConstantBlock("zero", 0))
 
 		self.addConnection("time", "FunctionG", input_port_name="t", output_port_name="OUT1")
@@ -44,7 +116,7 @@ class system(CBD):
 
 sys = system()
 sim = Simulator(sys)
-sim.setDeltaT(0.1)
+sim.setDeltaT(0.001)
 sim.run(100)
 data = sys.getSignalHistory("OUT")
 x, y = [x for x, _ in data], [y for _, y in data]
