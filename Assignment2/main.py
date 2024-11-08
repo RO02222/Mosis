@@ -101,7 +101,33 @@ class FunctionGBlock(CBD):
 		self.addConnection("Invert", "Divide")
 		self.addConnection("Divide", "g")
 
-class system(CBD):
+class BackwardsEulerSystem(CBD):
+	def __init__(self, name="system"):
+		CBD.__init__(self, name, output_ports=["OUT"])
+		self.addBlock(FunctionGBlock())
+		self.addBlock(TimeBlock("time"))
+		self.addBlock(BackwardEulerIntegrator("euler"))
+		self.addBlock(ConstantBlock("zero", 0))
+
+		self.addConnection("time", "FunctionG", input_port_name="t", output_port_name="OUT1")
+		self.addConnection("FunctionG", "euler", output_port_name="g")
+		self.addConnection("zero", "euler", input_port_name="IC")
+		self.addConnection("euler", "OUT", output_port_name="OUT1")
+
+class ForwardsEulerSystem(CBD):
+	def __init__(self, name="system"):
+		CBD.__init__(self, name, output_ports=["OUT"])
+		self.addBlock(FunctionGBlock())
+		self.addBlock(TimeBlock("time"))
+		self.addBlock(ForwardEulerIntegrator("euler"))
+		self.addBlock(ConstantBlock("zero", 0))
+
+		self.addConnection("time", "FunctionG", input_port_name="t", output_port_name="OUT1")
+		self.addConnection("FunctionG", "euler", output_port_name="g")
+		self.addConnection("zero", "euler", input_port_name="IC")
+		self.addConnection("euler", "OUT", output_port_name="OUT1")
+
+class TrapezoidSystem(CBD):
 	def __init__(self, name="system"):
 		CBD.__init__(self, name, output_ports=["OUT"])
 		self.addBlock(FunctionGBlock())
@@ -114,12 +140,22 @@ class system(CBD):
 		self.addConnection("zero", "euler", input_port_name="IC")
 		self.addConnection("euler", "OUT", output_port_name="OUT1")
 
-sys = system()
-sim = Simulator(sys)
-sim.setDeltaT(0.001)
-sim.run(100)
-data = sys.getSignalHistory("OUT")
-x, y = [x for x, _ in data], [y for _, y in data]
-print(x, y)
-plt.plot(x, y)
-plt.show()
+b_e = BackwardsEulerSystem("backwardsEuler")
+f_e = ForwardsEulerSystem("forwardEuler")
+tr = TrapezoidSystem("trapezoid")
+
+for sys in [b_e, f_e, tr]:
+    print(f"{sys.getBlockName()}:")
+    for deltaT in [0.1, 0.01, 0.001]:
+        cloned_sys = sys.clone()
+
+        sim = Simulator(cloned_sys)
+        sim.setDeltaT(deltaT)
+        sim.run(100)
+        
+        data = cloned_sys.getSignalHistory("OUT")
+        result = data[-1][1]
+        error = abs(result - 3.212492104)
+        
+        print(f"deltaT={deltaT}: result={result}, error={error}")
+
