@@ -144,6 +144,21 @@ b_e = BackwardsEulerSystem("backwardsEuler")
 f_e = ForwardsEulerSystem("forwardEuler")
 tr = TrapezoidSystem("trapezoid")
 
+
+"""
+backwardsEuler:
+	deltaT=0.1: result=3.222190908877023, error=0.009698804877023015
+	deltaT=0.01: result=3.213459296657502, error=0.0009671926575021139
+	deltaT=0.001: result=3.212588796472303, error=9.669247230315037e-05
+forwardEuler:
+	deltaT=0.1: result=3.223153281886757, error=0.010661177886757134
+	deltaT=0.01: result=3.213555450684053, error=0.001063346684053279
+	deltaT=0.001: result=3.212598411043006, error=0.0001063070430062929
+trapezoid:
+	deltaT=0.1: result=3.2226720953818915, error=0.010179991381891629
+	deltaT=0.01: result=3.213507373670786, error=0.0010152696707863562
+	deltaT=0.001: result=3.21259360375765, error=0.00010149975765028074
+"""
 for sys in [b_e, f_e, tr]:
     print(f"{sys.getBlockName()}:")
     for deltaT in [0.1, 0.01, 0.001]:
