@@ -23,6 +23,21 @@ if __name__ == "__main__":
 				causality='output',
 				name='x',
 				mapping=[('plant', 'x_output')]
+			),
+			Variable(
+				type='Real',
+				initial='calculated',
+				variability='continuous',
+				causality='output',
+				name='th',
+				mapping=[('plant', 'th_output')]
+			),Variable(
+				type='Real',
+				initial='calculated',
+				variability='continuous',
+				causality='output',
+				name='u',
+				mapping=[('pid', 'Controller.OUT')]
 			)
 		],
 		components=[
@@ -54,12 +69,13 @@ if __name__ == "__main__":
 						  stop_time=40,
 						  output_interval=0.001)
 
-	# import matplotlib.pyplot as plt
-	#
-	# plt.plot([r[0] for r in result], [r[2] for r in result], label="x_tgt")
-	# plt.plot([r[0] for r in result], [r[3] for r in result], label="x_ego")
-	# plt.legend()
-	# plt.show()
-	# plt.plot([r[0] for r in result], [r[1] for r in result], label="x_err")
-	# plt.legend()
-	# plt.show()
+	import matplotlib
+
+	matplotlib.use("TkAgg")  # or use "TkAgg" if you want a GUI backend
+	import matplotlib.pyplot as plt
+
+	plt.plot([r[0] for r in result], [r[1] for r in result], label="x")
+	plt.plot([r[0] for r in result], [r[2] for r in result], label="th")
+	plt.plot([r[0] for r in result], [r[3] for r in result], label="u")
+	plt.legend()
+	plt.show()

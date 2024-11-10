@@ -149,7 +149,7 @@ class TrapezoidSystem(CBD):
 
 
 class PIDBlock(CBD):
-    def __init__(self, name="PIDController", Kp=1.0, Ki=0.1, Kd=0.01, set_point=10.0):
+    def __init__(self, name="Controller", Kp=1.0, Ki=0.1, Kd=0.01, set_point=10.0):
         CBD.__init__(self, name, ["IN"], ["OUT"])
 
         self.addBlock(ConstantBlock("SetPoint", value=set_point))
