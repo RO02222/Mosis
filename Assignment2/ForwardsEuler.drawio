@@ -1,0 +1,161 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/24.7.17 Chrome/128.0.6613.36 Electron/32.0.1 Safari/537.36" version="24.7.17">
+  <diagram name="Page-1" id="_U7D0eipX6wdhZo1n5Hy">
+    <mxGraphModel dx="2924" dy="1359" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <object label="%symbol%" placeholders="1" block_name="" class_name="DeltaTBlock" symbol="&amp;#916;t" id="eYUBFsWyntfvd2adoRaa-37">
+          <mxCell style="ellipse;whiteSpace=wrap;html=1;comic=0;fontSize=24;align=center;allowArrows=0;connectable=0;container=1;collapsible=0;recursiveResize=1;direction=west;resizable=0;metaEdit=1;" vertex="1" parent="1">
+            <mxGeometry x="150" y="360" width="80" height="80" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="eYUBFsWyntfvd2adoRaa-38">
+          <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-37">
+            <mxGeometry x="70" y="32.5" width="10" height="15" as="geometry">
+              <mxPoint x="6" y="-7" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%symbol%" placeholders="1" symbol="D" class_name="DelayBlock" block_name="" id="eYUBFsWyntfvd2adoRaa-39">
+          <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fontSize=36;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;metaEdit=1;connectable=0;" vertex="1" parent="1">
+            <mxGeometry x="280" y="470" width="80" height="80" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="eYUBFsWyntfvd2adoRaa-40">
+          <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-39">
+            <mxGeometry x="70" y="32.5" width="10" height="15" as="geometry">
+              <mxPoint x="5" y="-7" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IC" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-41">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-39">
+            <mxGeometry y="17.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IN1" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-42">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-39">
+            <mxGeometry y="47.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%symbol%" placeholders="1" symbol="&amp;prod;" class_name="ProductBlock" block_name="" numberOfInputs="2" id="eYUBFsWyntfvd2adoRaa-43">
+          <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fontSize=36;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;spacingTop=-6;metaEdit=1;connectable=0;" vertex="1" parent="1">
+            <mxGeometry x="270" y="260" width="80" height="80" as="geometry" />
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="eYUBFsWyntfvd2adoRaa-44">
+          <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-43">
+            <mxGeometry x="70" y="32.5" width="10" height="15" as="geometry">
+              <mxPoint x="5" y="-7" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IN1" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-45">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-43">
+            <mxGeometry y="17.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IN2" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-46">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-43">
+            <mxGeometry y="47.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%symbol%" placeholders="1" symbol="&amp;sum;" class_name="AdderBlock" block_name="" numberOfInputs="2" id="eYUBFsWyntfvd2adoRaa-47">
+          <mxCell style="whiteSpace=wrap;html=1;aspect=fixed;comic=0;fontSize=36;align=center;resizable=0;container=1;collapsible=0;points=[];allowArrows=0;spacingTop=-6;metaEdit=1;connectable=0;" vertex="1" parent="1">
+            <mxGeometry x="425" y="260" width="80" height="80" as="geometry" />
+          </mxCell>
+        </object>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-55" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="eYUBFsWyntfvd2adoRaa-47" source="eYUBFsWyntfvd2adoRaa-48">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="265" y="40" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <object label="%name%" placeholders="1" name="OUT1" class_name="OutputPort" id="eYUBFsWyntfvd2adoRaa-48">
+          <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=0;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-47">
+            <mxGeometry x="70" y="32.5" width="10" height="15" as="geometry">
+              <mxPoint x="5" y="-7" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IN1" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-49">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-47">
+            <mxGeometry y="17.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="IN2" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-50">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=0;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="eYUBFsWyntfvd2adoRaa-47">
+            <mxGeometry y="47.5" width="10" height="15" as="geometry">
+              <mxPoint x="-4" y="-8" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-51" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-38" target="eYUBFsWyntfvd2adoRaa-46">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="220" y="310" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-52" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-44" target="eYUBFsWyntfvd2adoRaa-49">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-53" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-40" target="eYUBFsWyntfvd2adoRaa-50">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="390" y="320" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-54" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-48" target="eYUBFsWyntfvd2adoRaa-42">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="570" y="630" as="targetPoint" />
+            <Array as="points">
+              <mxPoint x="525" y="300" />
+              <mxPoint x="525" y="580" />
+              <mxPoint x="260" y="580" />
+              <mxPoint x="260" y="525" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-59" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-56" target="eYUBFsWyntfvd2adoRaa-41">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="140" y="493" />
+              <mxPoint x="140" y="495" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <object label="%name%" placeholders="1" name="IC" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-56">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5],[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=1;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="1">
+            <mxGeometry x="-77" y="435" width="76.67" height="115" as="geometry">
+              <mxPoint x="-78" y="3" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <mxCell id="eYUBFsWyntfvd2adoRaa-58" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="eYUBFsWyntfvd2adoRaa-57" target="eYUBFsWyntfvd2adoRaa-45">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <object label="%name%" placeholders="1" name="IN" class_name="InputPort" id="eYUBFsWyntfvd2adoRaa-57">
+          <mxCell style="triangle;fontSize=14;points=[[0,0.5],[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=right;spacingLeft=0;spacingRight=8;html=1;comic=0;treeFolding=0;treeMoving=0;resizable=1;movableLabel=1;spacing=2;aspect=fixed;fillColor=#000000;metaEdit=1;" vertex="1" parent="1">
+            <mxGeometry x="-77" y="227.5" width="76.67" height="115" as="geometry">
+              <mxPoint x="-78" y="3" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+        <object label="%name%" placeholders="1" name="OUT" class_name="OutputPort" id="eYUBFsWyntfvd2adoRaa-60">
+          <mxCell style="triangle;fillColor=#ffffff;fontSize=14;points=[[0,0.5],[1,0.5]];allowArrows=0;verticalAlign=middle;horizontal=1;spacingTop=0;align=left;spacingLeft=4;spacingRight=0;html=1;comic=0;treeFolding=0;treeMoving=0;movable=1;resizable=1;rotatable=1;deletable=1;editable=1;connectable=1;movableLabel=1;spacing=2;aspect=fixed;metaEdit=1;" vertex="1" parent="1">
+            <mxGeometry x="690" y="252.5" width="63.33" height="95" as="geometry">
+              <mxPoint x="60" y="-9" as="offset" />
+            </mxGeometry>
+          </mxCell>
+        </object>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
