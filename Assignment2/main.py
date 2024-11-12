@@ -148,49 +148,85 @@ class TrapezoidSystem(CBD):
         self.addConnection("euler", "OUT", output_port_name="OUT1")
 
 
+class PID_Error(CBD):
+    def __init__(self, name="PID_Error", setPoint=10.0):
+        CBD.__init__(self, name, input_ports=["IN1"], output_ports=["OUT1"])
+
+        self.addBlock(ConstantBlock("setPoint", value=setPoint))
+        self.addBlock(NegatorBlock("Negate"))
+        self.addBlock(AdderBlock("_Err"))
+        self.addConnection("IN1", "Negate")
+        self.addConnection("Negate", "_Err")
+        self.addConnection("setPoint", "_Err")
+        self.addConnection("_Err", "OUT1")
+
+
+class PID_P(CBD):
+    def __init__(self, name="PID_P", Kp=1.0):
+        CBD.__init__(self, name, ["IN1"], ["OUT1"])
+        self.addBlock(ConstantBlock("Kp", value=Kp))
+        self.addBlock(ProductBlock("P"))
+        self.addConnection("IN1", "P")
+        self.addConnection("Kp", "P")
+        self.addConnection("P", "OUT1")
+
+
+class PID_I(CBD):
+    def __init__(self, name="PID_I", Ki=1.0):
+        CBD.__init__(self, name, ["IN1"], ["OUT1"])
+        self.addBlock(ConstantBlock("Ki", value=Ki))
+        self.addBlock(ConstantBlock("I_init", value=0))
+        self.addBlock(IntegratorBlock("I_"))
+        self.addBlock(ProductBlock("P"))
+        self.addConnection("IN1", "I_", input_port_name="IN1")
+        self.addConnection("I_init", "I_", output_port_name="OUT1", input_port_name="IC")
+        self.addConnection("I_", "P")
+        self.addConnection("Ki", "P")
+        self.addConnection("P", "OUT1")
+
+class PID_D(CBD):
+    def __init__(self, name="PID_D", Kd=1.0):
+        CBD.__init__(self, name, ["IN1"], ["OUT1"])
+        self.addBlock(ConstantBlock("Kd", value=Kd))
+        self.addBlock(ConstantBlock("D_init", value=0))
+        self.addBlock(DerivatorBlock("D_"))
+        self.addBlock(ProductBlock("P"))
+        self.addConnection("IN1", "D_", input_port_name="IN1")
+        self.addConnection("D_init", "D_", output_port_name="OUT1", input_port_name="IC")
+        self.addConnection("D_", "P")
+        self.addConnection("Kd", "P")
+        self.addConnection("P", "OUT1")
+
+
 class PIDBlock(CBD):
-    def __init__(self, name="Controller", Kp=1.0, Ki=0.1, Kd=0.01, set_point=10.0):
+    def __init__(self, name="Controller", Kp=15.0, Ki=1.0, Kd=22.0, setPoint=10.0):
         CBD.__init__(self, name, ["IN"], ["OUT"])
 
-        self.addBlock(ConstantBlock("SetPoint", value=set_point))
-        self.addBlock(ConstantBlock("Kp", value=Kp))
-        self.addBlock(ConstantBlock("Ki", value=Ki))
-        self.addBlock(ConstantBlock("Kd", value=Kd))
+        self.addBlock(PID_Error("Err", setPoint))
+        self.addBlock(AdderBlock("Sum", 3))
+        self.addBlock(PID_P("P_", Kp))
+        self.addBlock(PID_I("I_", Ki))
+        self.addBlock(PID_D("D_", Kd))
+        self.addConnection("IN", "Err")
+        self.addConnection("Err", "P_")
+        self.addConnection("Err", "I_")
+        self.addConnection("Err", "D_")
+        self.addConnection("P_", "Sum", input_port_name="IN1")
+        self.addConnection("I_", "Sum", input_port_name="IN2")
+        self.addConnection("D_", "Sum", input_port_name="IN3")
+        self.addConnection("Sum", "OUT")
 
-        self.addBlock(NegatorBlock("Negate"))
-        self.addConnection("IN", "Negate", input_port_name="IN1")
 
-        self.addBlock(AdderBlock("Error"))
-        self.addConnection("Negate", "Error", output_port_name="OUT1", input_port_name="IN1")
-        self.addConnection("SetPoint", "Error", input_port_name="IN2")
-        #
-        # # Proportional part (Kp * Error)
-        # self.addBlock(ProductBlock("Proportional"))
-        # self.addConnection("Error", "Proportional")
-        # self.addConnection("Kp", "Proportional")
-        #
-        # # Integral part (Ki * Integral(Error))
-        # self.addBlock(IntegratorBlock("Integral"))
-        # self.addBlock(ProductBlock("IntegralTerm"))
-        # self.addConnection("Error", "Integral")
-        # self.addConnection("Integral", "IntegralTerm")
-        # self.addConnection("Ki", "IntegralTerm")
-        #
-        # # Derivative part (Kd * Derivative(Error))
-        # self.addBlock(DerivatorBlock("Derivative"))
-        # self.addBlock(ProductBlock("DerivativeTerm"))
-        # self.addConnection("Error", "Derivative")
-        # self.addConnection("Derivative", "DerivativeTerm")
-        # self.addConnection("Kd", "DerivativeTerm")
-        #
-        # # Sum up Proportional, Integral, and Derivative terms
-        # self.addBlock(AdderBlock("PIDOutput"))
-        # self.addConnection("Proportional", "PIDOutput")
-        # self.addConnection("IntegralTerm", "PIDOutput")
-        # self.addConnection("DerivativeTerm", "PIDOutput")
-        #
-        # # Connect final PID output
-        # self.addConnection("PIDOutput", "OUT")
+
+class PIDTest(CBD):
+    def __init__(self, name="PIDTIME"):
+        CBD.__init__(self, name, [], ["OUT"])
+
+        self.addBlock(PIDBlock("PID"))
+        self.addBlock(TimeBlock("time"))
+        self.addConnection("time", "PID", input_port_name="IN", output_port_name="OUT1")
+        self.addConnection("PID", "OUT", output_port_name="OUT")
+
 
 
 b_e = BackwardsEulerSystem("backwardsEuler")

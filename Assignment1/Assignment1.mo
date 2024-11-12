@@ -69,12 +69,15 @@ package Assignment1
     extends Modelica.Blocks.Icons.Block;
     extends pendulum;
     Modelica.Blocks.Interfaces.RealInput u_input "Input signal connector" annotation(
-      Placement(transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}), iconTransformation(origin = {-90, -6}, extent = {{-20, -20}, {20, 20}})));
+      Placement(transformation(origin = {-120, 0}, extent = {{-20, -20}, {20, 20}}), iconTransformation(origin = {-110, 32}, extent = {{-20, -20}, {20, 20}})));
     Modelica.Blocks.Interfaces.RealOutput x_output "Output signal connector" annotation(
       Placement(transformation(origin = {110, 0}, extent = {{-10, -10}, {10, 10}}), iconTransformation(origin = {118, -4}, extent = {{-10, -10}, {10, 10}})));
+    Modelica.Blocks.Interfaces.RealOutput th_output "Output signal connector" annotation(
+      Placement(transformation(origin = {110, -24}, extent = {{-10, -10}, {10, 10}}), iconTransformation(origin = {118, 38}, extent = {{-10, -10}, {10, 10}})));
   equation
     u_input = u;
     x_output = x;
+    th_output = th;
   end plant;
 
   block pid
