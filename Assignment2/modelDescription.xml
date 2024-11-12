@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<fmiModelDescription fmiVersion="2.0" modelName="Controller"
+	guid="{5f524151-10ba-4ed4-9a45-8b003724aec9}"
+	description="" generationTool="CBD2FMU">
+
+	<ModelExchange modelIdentifier="Controller">
+		<SourceFiles>
+			<File name="all.c"/>
+			<File name="lsolve.c"/>
+		</SourceFiles>
+	</ModelExchange>
+	<CoSimulation modelIdentifier="Controller" canHandleVariableCommunicationStepSize="true">
+		<SourceFiles>
+			<File name="all.c"/>
+			<File name="lsolve.c"/>
+		</SourceFiles>
+	</CoSimulation>
+
+	<!-- Unit definitions: Not required/used in CBD -->
+	<!-- Log categories: Not required/used in CBD -->
+
+	<DefaultExperiment startTime="0.0"
+		stopTime="40"
+		stepSize="0.001"
+		tolerance="1e-06" />
+
+	<!-- Vendor Annotations: Not required/used in CBD -->
+
+	<ModelVariables>
+		<ScalarVariable name="Controller.IN" valueReference="0"  
+			causality="input" variability="continuous">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.OUT" valueReference="1" initial="calculated" 
+			causality="output" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Sum.IN1" valueReference="2" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Sum.IN2" valueReference="3" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Sum.IN3" valueReference="4" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Sum.OUT1" valueReference="5" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err_setPoint.OUT1" valueReference="6" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="10.0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err_Negate.IN1" valueReference="7" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err_Negate.OUT1" valueReference="8" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err__Err.IN1" valueReference="9" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err__Err.IN2" valueReference="10" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.Err__Err.OUT1" valueReference="11" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.P__Kp.OUT1" valueReference="12" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="15.0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.P__P.IN1" valueReference="13" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.P__P.IN2" valueReference="14" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.P__P.OUT1" valueReference="15" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__Ki.OUT1" valueReference="16" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="1.0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I_init.OUT1" valueReference="17" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__P.IN1" valueReference="18" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__P.IN2" valueReference="19" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__P.OUT1" valueReference="20" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__zero.OUT1" valueReference="21" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delta_t.OUT1" valueReference="22" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayIn.IN1" valueReference="23" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayIn.IC" valueReference="24" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayIn.OUT1" valueReference="25" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__multDelta.IN1" valueReference="26" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__multDelta.IN2" valueReference="27" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__multDelta.OUT1" valueReference="28" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayState.IN1" valueReference="29" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayState.IC" valueReference="30" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__delayState.OUT1" valueReference="31" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__sumState.IN1" valueReference="32" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__sumState.IN2" valueReference="33" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.I__I__sumState.OUT1" valueReference="34" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__Kd.OUT1" valueReference="35" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="22.0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D_init.OUT1" valueReference="36" initial="exact" 
+			causality="local" variability="constant">
+			<Real start="0"/>
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__P.IN1" valueReference="37" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__P.IN2" valueReference="38" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__P.OUT1" valueReference="39" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__delta_t.OUT1" valueReference="40" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__multIc.IN1" valueReference="41" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__multIc.IN2" valueReference="42" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__multIc.OUT1" valueReference="43" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__neg1.IN1" valueReference="44" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__neg1.OUT1" valueReference="45" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum1.IN1" valueReference="46" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum1.IN2" valueReference="47" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum1.OUT1" valueReference="48" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__delay.IN1" valueReference="49" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__delay.IC" valueReference="50" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__delay.OUT1" valueReference="51" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__neg2.IN1" valueReference="52" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__neg2.OUT1" valueReference="53" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum2.IN1" valueReference="54" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum2.IN2" valueReference="55" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__sum2.OUT1" valueReference="56" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__mult.IN1" valueReference="57" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__mult.IN2" valueReference="58" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__mult.OUT1" valueReference="59" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__inv.IN1" valueReference="60" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+		<ScalarVariable name="Controller.D__D__inv.OUT1" valueReference="61" initial="calculated" 
+			causality="local" variability="continuous">
+			<Real />
+		</ScalarVariable>
+	</ModelVariables>
+
+	<ModelStructure>
+		<Outputs>
+			<Unknown index="2"/>
+		</Outputs>
+		<InitialUnknowns>
+			<Unknown index="2"/>
+		</InitialUnknowns>
+	</ModelStructure>
+</fmiModelDescription>
