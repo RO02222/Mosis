@@ -1,0 +1,928 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<trace>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Init_Passage">
+    <token age="0" place="Ship_Move_Init_Model"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_ReInit_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Work_First_A">
+    <token age="0" place="Clock_Workers_Active"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_A_Skip1">
+    <token age="0" place="Shared_Work_A"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Clock_Work_Next_B">
+    <token age="0" place="Shared_Work_A_Done"/>
+    <token age="0" place="Clock_Work_Active"/>
+  </transition>
+  <transition id="Ship_Move_Passage_InT">
+    <token age="0" place="Shared_Arrived"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_In_AT">
+    <token age="0" place="Ship_Move_Berth_In_A_Cap"/>
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+    <token age="0" place="Shared_Passage_In"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_B_Skip1">
+    <token age="0" place="Shared_Work_B"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_AT">
+    <token age="0" place="Shared_Berth_In_A"/>
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+    <token age="0" place="Ship_Move_Berth_A_Cap"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickB">
+    <token age="0" place="Shared_Work_B_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Clock_ReInit_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+  </transition>
+  <transition id="Clock_Work_First_B">
+    <token age="0" place="Clock_Workers_Active"/>
+    <token age="0" place="Clock_Priority_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Work_B_Skip1">
+    <token age="0" place="Shared_Work_B"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Work_Next_A">
+    <token age="0" place="Shared_Work_B_Done"/>
+    <token age="0" place="Clock_Work_Active"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_Request_AT">
+    <token age="0" place="Shared_Work_A"/>
+    <token age="0" place="Shared_Berth_A"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Clock_Next_TickA">
+    <token age="0" place="Shared_Work_A_Done"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Clock_ReInit_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Clock_Work_First_A">
+    <token age="0" place="Clock_Workers_Active"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_InT">
+    <token age="0" place="Shared_Arrived"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Passage_InT">
+    <token age="0" place="Shared_Arrived"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_AT">
+    <token age="0" place="Ship_Move_Work_Request_A"/>
+    <token age="0" place="Shared_Work_A"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_In_AT">
+    <token age="0" place="Ship_Move_Berth_In_A_Cap"/>
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+    <token age="0" place="Shared_Passage_In"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_AT">
+    <token age="0" place="Ship_Move_Berth_Out_A_Cap"/>
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+    <token age="0" place="Shared_Berth_A"/>
+    <token age="0" place="Shared_Berth_A_Served"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Berth_AT">
+    <token age="0" place="Shared_Berth_In_A"/>
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+    <token age="0" place="Ship_Move_Berth_A_Cap"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_In_BT">
+    <token age="0" place="Ship_Move_Berth_In_B_Cap"/>
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+    <token age="0" place="Shared_Passage_In"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_BT">
+    <token age="0" place="Shared_Berth_In_B"/>
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+    <token age="0" place="Ship_Move_Berth_B_Cap"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_Out_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Passage_InT">
+    <token age="0" place="Shared_Arrived"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Clock_Work_Next_B">
+    <token age="0" place="Shared_Work_A_Done"/>
+    <token age="0" place="Clock_Work_Active"/>
+  </transition>
+  <transition id="Ship_Move_Passage_InT">
+    <token age="0" place="Shared_Arrived"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Clock_ReInit_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Work_Request_BT">
+    <token age="0" place="Shared_Work_B"/>
+    <token age="0" place="Shared_Berth_B"/>
+  </transition>
+  <transition id="Clock_Work_First_B">
+    <token age="0" place="Clock_Workers_Active"/>
+    <token age="0" place="Clock_Priority_Workers"/>
+  </transition>
+  <transition id="Clock_Work_Next_A">
+    <token age="0" place="Shared_Work_B_Done"/>
+    <token age="0" place="Clock_Work_Active"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_In_BT">
+    <token age="0" place="Ship_Move_Berth_In_B_Cap"/>
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+    <token age="0" place="Shared_Passage_In"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_Request_AT">
+    <token age="0" place="Shared_Work_A"/>
+    <token age="0" place="Shared_Berth_A"/>
+  </transition>
+  <transition id="Clock_Next_TickA">
+    <token age="0" place="Shared_Work_A_Done"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generator_Skip">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_In_AT">
+    <token age="0" place="Ship_Move_Berth_In_A_Cap"/>
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+    <token age="0" place="Shared_Passage_In"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_AT">
+    <token age="0" place="Shared_Berth_In_A"/>
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+    <token age="0" place="Ship_Move_Berth_A_Cap"/>
+  </transition>
+  <transition id="Clock_Tick">
+    <token age="0" place="Shared_Next_Tick"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_Skip">
+    <token age="0" place="Shared_Moving_Token_Gen"/>
+  </transition>
+  <transition id="Ship_Move_Berth_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Berth_A_Skip1">
+    <token age="0" place="Ship_Move_Berth_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_AT">
+    <token age="0" place="Shared_Berth_Out_A"/>
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+    <token age="0" place="Ship_Move_Passage_Cap"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_B_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_A_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_A_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip1">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Passage_Out_A_Skip1">
+    <token age="0" place="Ship_Move_Passage_Out_A_Move"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_B_Skip2">
+    <token age="0" place="Ship_Move_Berth_In_B_Move"/>
+  </transition>
+  <transition id="Ship_Move_Work_BT">
+    <token age="0" place="Shared_Work_B"/>
+    <token age="0" place="Ship_Move_Work_Request_B"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Berth_Out_BT">
+    <token age="0" place="Ship_Move_Berth_Out_B_Move"/>
+    <token age="0" place="Ship_Move_Berth_Out_B_Cap"/>
+    <token age="0" place="Shared_Berth_B"/>
+    <token age="0" place="Shared_Berth_B_Served"/>
+  </transition>
+  <transition id="Clock_ReInit_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+  </transition>
+  <transition id="Ship_Move_Passage_In_Skip2">
+    <token age="0" place="Ship_Move_Passage_In_Move"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Clock_Work_First_A">
+    <token age="0" place="Clock_Workers_Active"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Berth_MovedT">
+    <token age="0" place="Ship_Move_A_Moved"/>
+    <token age="0" place="Ship_Move_B_Moved"/>
+  </transition>
+  <transition id="Clock_Consume_Workers">
+    <token age="0" place="Shared_Ships_Moved"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+  <transition id="Ship_Move_Generate_ship">
+    <token age="0" place="Ship_Move_Generating"/>
+  </transition>
+  <transition id="Ship_Move_Work_AT">
+    <token age="0" place="Ship_Move_Work_Request_A"/>
+    <token age="0" place="Shared_Work_A"/>
+    <token age="0" place="Shared_Workers"/>
+  </transition>
+</trace>
