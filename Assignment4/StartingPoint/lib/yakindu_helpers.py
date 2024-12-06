@@ -5,7 +5,7 @@ from lib.controller import Controller, pretty_time
 
 # for some stupid reason, we have to import the 'Observable' class like this, or `type(obj) == Observable` will fail:
 import sys, os
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '../lib')))
 from yakindu.rx import Observable, Observer
 
 # Adapter to allow Yakindu generated code to (un)set timeouts
