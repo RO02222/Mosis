@@ -821,8 +821,8 @@ class LockController:
 		if self.__pending and self.__open_door == self.HIGH:
 			self.open_flow_observable.next(self.LOW)
 			self.__entry_action_main_region_controller()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_default()
 			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
 			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
 			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
@@ -1083,6 +1083,11 @@ class LockController:
 				self.set_request_pending_observable.next(True)
 				self.__pending = True
 				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_red_default()
+				transitioned_after = 2
+			elif self.open_door_low:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_green()
+				self.green_light_observable.next(self.LOW)
+				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default()
 				transitioned_after = 2
 		return transitioned_after
 	
