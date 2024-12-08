@@ -273,14 +273,17 @@ class LockController:
 		self.red_light_observable.next(self.HIGH)
 		self.close_doors_observable.next(self.LOW)
 		self.close_doors_observable.next(self.HIGH)
+		self.close_flow_observable.next(self.LOW)
+		self.close_flow_observable.next(self.HIGH)
 		self.set_sensor_broken_observable.next()
 		
 	def __entry_action_main_region_controller(self):
 		"""Entry action for state 'Controller'..
 		"""
 		#Entry action for state 'Controller'.
-		self.open_doors_observable.next(self.LOW)
-		self.green_light_observable.next(self.LOW)
+		if not self.__pending:
+			self.open_doors_observable.next(self.LOW)
+			self.green_light_observable.next(self.LOW)
 		
 	def __entry_action_main_region_controller_r1_normal_mode_door_low_check_door(self):
 		"""Entry action for state 'CheckDoor'..
@@ -815,8 +818,24 @@ class LockController:
 		"""The reactions of state null..
 		"""
 		#The reactions of state null.
-		if self.__pending:
-			self.__enter_sequence_main_region_controller_default()
+		if self.__pending and self.__open_door == self.HIGH:
+			self.open_flow_observable.next(self.LOW)
+			self.__entry_action_main_region_controller()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
+			self.__history_vector[0] = self.__state_vector[0]
+		elif self.__pending and self.__open_door == self.LOW:
+			self.open_flow_observable.next(self.HIGH)
+			self.__entry_action_main_region_controller()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
+			self.__history_vector[0] = self.__state_vector[0]
 		else:
 			self.__entry_action_main_region_controller()
 			self.__react_main_region_controller_r1_history()
@@ -977,6 +996,8 @@ class LockController:
 				self.set_request_pending_observable.next(False)
 				self.raise_open_door_low()
 				self.open_doors_observable.next(self.LOW)
+				self.__pending = False
+				self.__open_door = self.LOW
 				self.__time_events[1] = False
 				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_open_default()
 				transitioned_after = 0
@@ -1041,6 +1062,8 @@ class LockController:
 				self.set_request_pending_observable.next(False)
 				self.raise_open_door_high()
 				self.open_doors_observable.next(self.HIGH)
+				self.__pending = False
+				self.__open_door = self.HIGH
 				self.__time_events[3] = False
 				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_open_default()
 				transitioned_after = 1
@@ -1058,6 +1081,7 @@ class LockController:
 				self.raise_close_door_low()
 				self.red_light_observable.next(self.LOW)
 				self.set_request_pending_observable.next(True)
+				self.__pending = True
 				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_red_default()
 				transitioned_after = 2
 		return transitioned_after
@@ -1088,6 +1112,7 @@ class LockController:
 				self.raise_close_door_high()
 				self.red_light_observable.next(self.HIGH)
 				self.set_request_pending_observable.next(True)
+				self.__pending = True
 				self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_red_default()
 				transitioned_after = 3
 		return transitioned_after
