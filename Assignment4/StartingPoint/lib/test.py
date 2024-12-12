@@ -148,7 +148,7 @@ def run_scenario(input_trace, expected_output_trace, statechart_class, environme
 def run_scenarios(scenarios, statechart_class, environment_class, verbose=True):
     ok = True
     for scenario in scenarios:
-        print(f"Running scenario: {scenario["name"]}")
+        print(f"Running scenario: {scenario['name']}")
         ok = run_scenario(scenario["input_events"], scenario["output_events"], statechart_class, environment_class, verbose=verbose) and ok
         print("--------")
     if ok:

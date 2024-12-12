@@ -80,16 +80,16 @@ SCENARIOS = [
         (0, "open_doors", 0),
         (0, "green_light", 0),
         (2393556604, "red_light", 0),
-        (2393556604, "set_request_pending", True),
         (4393556604, "close_doors", 0),
+        (2393556604, "set_request_pending", True),
         (4393556604, "open_flow", 1),
         (7193556604, "close_flow", 1),
         (7193556604, "set_request_pending", False),
         (7193556604, "open_doors", 1),
         (7193556604, "green_light", 1),
         (9193747734, "red_light", 1),
-        (9193747734, "set_request_pending", True),
         (11193747734, "close_doors", 1),
+        (9193747734, "set_request_pending", True),
         (11193747734, "open_flow", 0),
         (14193747734, "close_flow", 0),
         (14193747734, "set_request_pending", False),
@@ -204,6 +204,13 @@ SCENARIOS = [
         (11613791769, "open_doors", 1),
         (11613791769, "green_light", 1),
     ],
+},
+{
+    "name": "2 pendings with both broken sensor DURING water lvl change",
+    "input_events":
+    [(0, 'water_lvl', 508), (1708282000.0, 'request_lvl_change', None), (3808282000.0, 'water_lvl', 675), (3908282000.0, 'water_lvl', 811), (4008282000.0, 'water_lvl', 926), (4108282000.0, 'water_lvl', 1025), (4134066800.0, 'water_lvl', 99004), (6610830900.0, 'water_lvl', 1028), (7781407300.0, 'resume', None), (7881407300.0, 'water_lvl', 1104), (7981407300.0, 'water_lvl', 1173), (8081407300.0, 'water_lvl', 1231), (8181407300.0, 'water_lvl', 1281), (8281407300.0, 'water_lvl', 1316), (8381407300.0, 'water_lvl', 1346), (8481407300.0, 'water_lvl', 1378), (8581407300.0, 'water_lvl', 1399), (8681407300.0, 'water_lvl', 1414), (8781407300.0, 'water_lvl', 1436), (8881407300.0, 'water_lvl', 1450), (8981407300.0, 'water_lvl', 1459), (9081407300.0, 'water_lvl', 1469), (9181407300.0, 'water_lvl', 1471), (9281407300.0, 'water_lvl', 1481), (9381407300.0, 'water_lvl', 1488), (9481407300.0, 'water_lvl', 1490), (9581407300.0, 'water_lvl', 1492), (9681407300.0, 'water_lvl', 1491), (9781407300.0, 'water_lvl', 1497), (9881407300.0, 'water_lvl', 1501), (9981407300.0, 'water_lvl', 1506), (10081407300.0, 'water_lvl', 1508), (10181407300.0, 'water_lvl', 1504), (12864339000.0, 'request_lvl_change', None), (14964339000.0, 'water_lvl', 1340), (15064339000.0, 'water_lvl', 1195), (15164339000.0, 'water_lvl', 1084), (15264339000.0, 'water_lvl', 984), (15364339000.0, 'water_lvl', 898), (15434342400.0, 'water_lvl', 99007), (16703926500.0, 'water_lvl', 902), (17472391800.0, 'resume', None), (17572391800.0, 'water_lvl', 839), (17672391800.0, 'water_lvl', 781), (17772391800.0, 'water_lvl', 727), (17872391800.0, 'water_lvl', 693), (17972391800.0, 'water_lvl', 665), (18072391800.0, 'water_lvl', 631), (18172391800.0, 'water_lvl', 610), (18272391800.0, 'water_lvl', 596), (18372391800.0, 'water_lvl', 574), (18472391800.0, 'water_lvl', 564), (18572391800.0, 'water_lvl', 550), (18672391800.0, 'water_lvl', 549), (18772391800.0, 'water_lvl', 539), (18872391800.0, 'water_lvl', 529), (18972391800.0, 'water_lvl', 521), (19072391800.0, 'water_lvl', 519), (19172391800.0, 'water_lvl', 517), (19272391800.0, 'water_lvl', 518), (19372391800.0, 'water_lvl', 507), (19472391800.0, 'water_lvl', 510), (19572391800.0, 'water_lvl', 509), (19672391800.0, 'water_lvl', 506), (19772391800.0, 'water_lvl', 508), (19872391800.0, 'water_lvl', 504)],
+    "output_events":
+    [(0, 'open_doors', 0), (0, 'green_light', 0), (1708282000.0, 'set_request_pending', True), (1708282000.0, 'red_light', 0), (3708282000.0, 'close_doors', 0), (3708282000.0, 'open_flow', 1), (4134066800.0, 'red_light', 0), (4134066800.0, 'red_light', 1), (4134066800.0, 'close_doors', 0), (4134066800.0, 'close_doors', 1), (4134066800.0, 'close_flow', 0), (4134066800.0, 'close_flow', 1), (4134066800.0, 'set_sensor_broken', None), (7781407300.0, 'open_flow', 1), (10181407300.0, 'close_flow', 1), (10181407300.0, 'set_request_pending', False), (10181407300.0, 'open_doors', 1), (10181407300.0, 'green_light', 1), (12864339000.0, 'set_request_pending', True), (12864339000.0, 'red_light', 1), (14864339000.0, 'close_doors', 1), (14864339000.0, 'open_flow', 0), (15434342400.0, 'red_light', 0), (15434342400.0, 'red_light', 1), (15434342400.0, 'close_doors', 0), (15434342400.0, 'close_doors', 1), (15434342400.0, 'close_flow', 0), (15434342400.0, 'close_flow', 1), (15434342400.0, 'set_sensor_broken', None), (17472391800.0, 'open_flow', 0), (19872391800.0, 'close_flow', 0), (19872391800.0, 'set_request_pending', False), (19872391800.0, 'open_doors', 0), (19872391800.0, 'green_light', 0)]
 }
 ]
 

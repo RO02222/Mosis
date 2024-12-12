@@ -15,24 +15,26 @@ class LockController:
 		""" State Enum
 		"""
 		(
-			main_region_emergency_mode,
 			main_region_controller,
 			main_region_controller_r1normal_mode,
-			main_region_controller_r1normal_mode_door_low_open,
-			main_region_controller_r1normal_mode_door_low_closed,
-			main_region_controller_r1normal_mode_door_low_check_door,
-			main_region_controller_r1normal_mode_door_low_close_flow,
-			main_region_controller_r1normal_mode_door_high_open,
-			main_region_controller_r1normal_mode_door_high_closed,
-			main_region_controller_r1normal_mode_door_high_check_door,
-			main_region_controller_r1normal_mode_door_high_close_flow,
-			main_region_controller_r1normal_mode_light_low_green,
-			main_region_controller_r1normal_mode_light_low_red,
-			main_region_controller_r1normal_mode_light_high_green,
-			main_region_controller_r1normal_mode_light_high_red,
+			main_region_controller_r1normal_mode_low_low,
+			main_region_controller_r1normal_mode_low_lowdoor_closed,
+			main_region_controller_r1normal_mode_low_lowdoor_close_flow,
+			main_region_controller_r1normal_mode_low_lowdoor_check_door,
+			main_region_controller_r1normal_mode_low_lowdoor_open,
+			main_region_controller_r1normal_mode_low_lowlight_green,
+			main_region_controller_r1normal_mode_low_lowlight_red,
+			main_region_controller_r1normal_mode_highhigh,
+			main_region_controller_r1normal_mode_highhighdoor_closed,
+			main_region_controller_r1normal_mode_highhighdoor_close_flow,
+			main_region_controller_r1normal_mode_highhighdoor_check_door,
+			main_region_controller_r1normal_mode_highhighdoor_open,
+			main_region_controller_r1normal_mode_highhighlight_green,
+			main_region_controller_r1normal_mode_highhighlight_red,
 			main_region_controller_r1normal_mode_update_level_update,
+			main_region_controller_r1emergency_mode,
 			null_state
-		) = range(17)
+		) = range(19)
 	
 	
 	def __init__(self):
@@ -75,12 +77,12 @@ class LockController:
 		self.__internal_event_queue = queue.Queue()
 		self.in_event_queue = queue.Queue()
 		self.__previous_lvl = None
-		self.__open_door = None
+		self.__target_state = None
 		self.__pending = None
-		self.open_door_high = None
-		self.open_door_low = None
-		self.close_door_low = None
-		self.close_door_high = None
+		self.low_light_green = None
+		self.low_light_red = None
+		self.high_light_green = None
+		self.high_light_red = None
 		
 		# enumeration of all states:
 		self.__State = LockController.State
@@ -94,14 +96,14 @@ class LockController:
 		self.__time_events = [None] * 4
 		
 		# history vector:
-		self.__history_vector = [None] * 6
-		for __history_index in range(6):
+		self.__history_vector = [None] * 8
+		for __history_index in range(8):
 			self.__history_vector[__history_index] = self.State.null_state
 		
 		# initializations:
 		#Default init sequence for statechart LockController
-		self.__previous_lvl = 0
-		self.__open_door = self.LOW
+		self.__previous_lvl = self.LOW_LVL
+		self.__target_state = self.LOW
 		self.__pending = False
 		self.__is_executing = False
 		self.__state_conf_vector_position = None
@@ -121,40 +123,46 @@ class LockController:
 		"""Checks if the state is currently active.
 		"""
 		s = state
-		if s == self.__State.main_region_emergency_mode:
-			return self.__state_vector[0] == self.__State.main_region_emergency_mode
 		if s == self.__State.main_region_controller:
 			return (self.__state_vector[0] >= self.__State.main_region_controller)\
-				and (self.__state_vector[0] <= self.__State.main_region_controller_r1normal_mode_update_level_update)
+				and (self.__state_vector[0] <= self.__State.main_region_controller_r1emergency_mode)
 		if s == self.__State.main_region_controller_r1normal_mode:
 			return (self.__state_vector[0] >= self.__State.main_region_controller_r1normal_mode)\
 				and (self.__state_vector[0] <= self.__State.main_region_controller_r1normal_mode_update_level_update)
-		if s == self.__State.main_region_controller_r1normal_mode_door_low_open:
-			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_door_low_open
-		if s == self.__State.main_region_controller_r1normal_mode_door_low_closed:
-			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_door_low_closed
-		if s == self.__State.main_region_controller_r1normal_mode_door_low_check_door:
-			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_door_low_check_door
-		if s == self.__State.main_region_controller_r1normal_mode_door_low_close_flow:
-			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_door_low_close_flow
-		if s == self.__State.main_region_controller_r1normal_mode_door_high_open:
-			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_door_high_open
-		if s == self.__State.main_region_controller_r1normal_mode_door_high_closed:
-			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_door_high_closed
-		if s == self.__State.main_region_controller_r1normal_mode_door_high_check_door:
-			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_door_high_check_door
-		if s == self.__State.main_region_controller_r1normal_mode_door_high_close_flow:
-			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_door_high_close_flow
-		if s == self.__State.main_region_controller_r1normal_mode_light_low_green:
-			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_light_low_green
-		if s == self.__State.main_region_controller_r1normal_mode_light_low_red:
-			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_light_low_red
-		if s == self.__State.main_region_controller_r1normal_mode_light_high_green:
-			return self.__state_vector[3] == self.__State.main_region_controller_r1normal_mode_light_high_green
-		if s == self.__State.main_region_controller_r1normal_mode_light_high_red:
-			return self.__state_vector[3] == self.__State.main_region_controller_r1normal_mode_light_high_red
+		if s == self.__State.main_region_controller_r1normal_mode_low_low:
+			return (self.__state_vector[0] >= self.__State.main_region_controller_r1normal_mode_low_low)\
+				and (self.__state_vector[0] <= self.__State.main_region_controller_r1normal_mode_low_lowlight_red)
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_low_lowdoor_closed
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_low_lowdoor_close_flow
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_low_lowdoor_check_door
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			return self.__state_vector[0] == self.__State.main_region_controller_r1normal_mode_low_lowdoor_open
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowlight_green:
+			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_low_lowlight_green
+		if s == self.__State.main_region_controller_r1normal_mode_low_lowlight_red:
+			return self.__state_vector[1] == self.__State.main_region_controller_r1normal_mode_low_lowlight_red
+		if s == self.__State.main_region_controller_r1normal_mode_highhigh:
+			return (self.__state_vector[2] >= self.__State.main_region_controller_r1normal_mode_highhigh)\
+				and (self.__state_vector[2] <= self.__State.main_region_controller_r1normal_mode_highhighlight_red)
+		if s == self.__State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_highhighdoor_closed
+		if s == self.__State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_highhighdoor_close_flow
+		if s == self.__State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_highhighdoor_check_door
+		if s == self.__State.main_region_controller_r1normal_mode_highhighdoor_open:
+			return self.__state_vector[2] == self.__State.main_region_controller_r1normal_mode_highhighdoor_open
+		if s == self.__State.main_region_controller_r1normal_mode_highhighlight_green:
+			return self.__state_vector[3] == self.__State.main_region_controller_r1normal_mode_highhighlight_green
+		if s == self.__State.main_region_controller_r1normal_mode_highhighlight_red:
+			return self.__state_vector[3] == self.__State.main_region_controller_r1normal_mode_highhighlight_red
 		if s == self.__State.main_region_controller_r1normal_mode_update_level_update:
 			return self.__state_vector[4] == self.__State.main_region_controller_r1normal_mode_update_level_update
+		if s == self.__State.main_region_controller_r1emergency_mode:
+			return self.__state_vector[0] == self.__State.main_region_controller_r1emergency_mode
 		return False
 		
 	def time_elapsed(self, event_id):
@@ -180,45 +188,45 @@ class LockController:
 		return None
 	
 	
-	def raise_open_door_high(self):
-		"""Raise method for event open_door_high.
+	def raise_low_light_green(self):
+		"""Raise method for event low_light_green.
 		"""
-		self.__internal_event_queue.put(self.__raise_open_door_high_call)
+		self.__internal_event_queue.put(self.__raise_low_light_green_call)
 	
-	def __raise_open_door_high_call(self):
-		"""Raise callback for event open_door_high.
+	def __raise_low_light_green_call(self):
+		"""Raise callback for event low_light_green.
 		"""
-		self.open_door_high = True
+		self.low_light_green = True
 	
-	def raise_open_door_low(self):
-		"""Raise method for event open_door_low.
+	def raise_low_light_red(self):
+		"""Raise method for event low_light_red.
 		"""
-		self.__internal_event_queue.put(self.__raise_open_door_low_call)
+		self.__internal_event_queue.put(self.__raise_low_light_red_call)
 	
-	def __raise_open_door_low_call(self):
-		"""Raise callback for event open_door_low.
+	def __raise_low_light_red_call(self):
+		"""Raise callback for event low_light_red.
 		"""
-		self.open_door_low = True
+		self.low_light_red = True
 	
-	def raise_close_door_low(self):
-		"""Raise method for event close_door_low.
+	def raise_high_light_green(self):
+		"""Raise method for event high_light_green.
 		"""
-		self.__internal_event_queue.put(self.__raise_close_door_low_call)
+		self.__internal_event_queue.put(self.__raise_high_light_green_call)
 	
-	def __raise_close_door_low_call(self):
-		"""Raise callback for event close_door_low.
+	def __raise_high_light_green_call(self):
+		"""Raise callback for event high_light_green.
 		"""
-		self.close_door_low = True
+		self.high_light_green = True
 	
-	def raise_close_door_high(self):
-		"""Raise method for event close_door_high.
+	def raise_high_light_red(self):
+		"""Raise method for event high_light_red.
 		"""
-		self.__internal_event_queue.put(self.__raise_close_door_high_call)
+		self.__internal_event_queue.put(self.__raise_high_light_red_call)
 	
-	def __raise_close_door_high_call(self):
-		"""Raise callback for event close_door_high.
+	def __raise_high_light_red_call(self):
+		"""Raise callback for event high_light_red.
 		"""
-		self.close_door_high = True
+		self.high_light_red = True
 	
 	def raise_request_lvl_change(self):
 		"""Raise method for event request_lvl_change.
@@ -265,82 +273,122 @@ class LockController:
 		"""
 		self.door_obstructed = True
 	
-	def __entry_action_main_region_emergency_mode(self):
+	def __entry_action_main_region_controller(self):
+		"""Entry action for state 'Controller'..
+		"""
+		#Entry action for state 'Controller'.
+		if not self.__pending:
+			self.__previous_lvl = self.LOW_LVL
+		
+	def __entry_action_main_region_controller_r1_normal_mode_low_low_door_closed(self):
+		"""Entry action for state 'Closed'..
+		"""
+		#Entry action for state 'Closed'.
+		if ((self.__previous_lvl - self.HIGH_LVL) <= -(30) or (self.__previous_lvl - self.HIGH_LVL) >= 30) and self.__target_state == self.HIGH:
+			self.open_flow_observable.next(self.HIGH)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_low_low_door_close_flow(self):
+		"""Entry action for state 'Close Flow'..
+		"""
+		#Entry action for state 'Close Flow'.
+		self.timer_service.set_timer(self, 0, (1 * 1000), False)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_low_low_door_check_door(self):
+		"""Entry action for state 'CheckDoor'..
+		"""
+		#Entry action for state 'CheckDoor'.
+		self.timer_service.set_timer(self, 1, (2 * 1000), False)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_low_low_door_open(self):
+		"""Entry action for state 'Open'..
+		"""
+		#Entry action for state 'Open'.
+		self.open_doors_observable.next(self.LOW)
+		self.raise_low_light_green()
+		
+	def __entry_action_main_region_controller_r1_normal_mode_low_low_light_green(self):
+		"""Entry action for state 'Green'..
+		"""
+		#Entry action for state 'Green'.
+		self.green_light_observable.next(self.LOW)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_high_high_door_closed(self):
+		"""Entry action for state 'Closed'..
+		"""
+		#Entry action for state 'Closed'.
+		if ((self.__previous_lvl - self.LOW_LVL) <= -(30) or (self.__previous_lvl - self.LOW_LVL) >= 30) and self.__target_state == self.LOW:
+			self.open_flow_observable.next(self.LOW)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_high_high_door_close_flow(self):
+		"""Entry action for state 'Close Flow'..
+		"""
+		#Entry action for state 'Close Flow'.
+		self.timer_service.set_timer(self, 2, (1 * 1000), False)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_high_high_door_check_door(self):
+		"""Entry action for state 'CheckDoor'..
+		"""
+		#Entry action for state 'CheckDoor'.
+		self.timer_service.set_timer(self, 3, (2 * 1000), False)
+		
+	def __entry_action_main_region_controller_r1_normal_mode_high_high_door_open(self):
+		"""Entry action for state 'Open'..
+		"""
+		#Entry action for state 'Open'.
+		self.open_doors_observable.next(self.HIGH)
+		self.raise_high_light_green()
+		
+	def __entry_action_main_region_controller_r1_normal_mode_high_high_light_green(self):
+		"""Entry action for state 'Green'..
+		"""
+		#Entry action for state 'Green'.
+		self.green_light_observable.next(self.HIGH)
+		
+	def __entry_action_main_region_controller_r1_emergency_mode(self):
 		"""Entry action for state 'Emergency mode'..
 		"""
 		#Entry action for state 'Emergency mode'.
-		self.red_light_observable.next(self.LOW)
-		self.red_light_observable.next(self.HIGH)
 		self.close_doors_observable.next(self.LOW)
 		self.close_doors_observable.next(self.HIGH)
 		self.close_flow_observable.next(self.LOW)
 		self.close_flow_observable.next(self.HIGH)
 		self.set_sensor_broken_observable.next()
 		
-	def __entry_action_main_region_controller(self):
-		"""Entry action for state 'Controller'..
+	def __exit_action_main_region_controller_r1_normal_mode_low_low_door_close_flow(self):
+		"""Exit action for state 'Close Flow'..
 		"""
-		#Entry action for state 'Controller'.
-		if not self.__pending:
-			self.open_doors_observable.next(self.LOW)
-			self.green_light_observable.next(self.LOW)
-		
-	def __entry_action_main_region_controller_r1_normal_mode_door_low_check_door(self):
-		"""Entry action for state 'CheckDoor'..
-		"""
-		#Entry action for state 'CheckDoor'.
-		self.timer_service.set_timer(self, 0, (2 * 1000), False)
-		
-	def __entry_action_main_region_controller_r1_normal_mode_door_low_close_flow(self):
-		"""Entry action for state 'Close Flow'..
-		"""
-		#Entry action for state 'Close Flow'.
-		self.timer_service.set_timer(self, 1, (1 * 1000), False)
-		
-	def __entry_action_main_region_controller_r1_normal_mode_door_high_check_door(self):
-		"""Entry action for state 'CheckDoor'..
-		"""
-		#Entry action for state 'CheckDoor'.
-		self.timer_service.set_timer(self, 2, (2 * 1000), False)
-		
-	def __entry_action_main_region_controller_r1_normal_mode_door_high_close_flow(self):
-		"""Entry action for state 'Close Flow'..
-		"""
-		#Entry action for state 'Close Flow'.
-		self.timer_service.set_timer(self, 3, (1 * 1000), False)
-		
-	def __exit_action_main_region_controller_r1_normal_mode_door_low_check_door(self):
-		"""Exit action for state 'CheckDoor'..
-		"""
-		#Exit action for state 'CheckDoor'.
+		#Exit action for state 'Close Flow'.
 		self.timer_service.unset_timer(self, 0)
 		
-	def __exit_action_main_region_controller_r1_normal_mode_door_low_close_flow(self):
-		"""Exit action for state 'Close Flow'..
-		"""
-		#Exit action for state 'Close Flow'.
-		self.timer_service.unset_timer(self, 1)
-		
-	def __exit_action_main_region_controller_r1_normal_mode_door_high_check_door(self):
+	def __exit_action_main_region_controller_r1_normal_mode_low_low_door_check_door(self):
 		"""Exit action for state 'CheckDoor'..
 		"""
 		#Exit action for state 'CheckDoor'.
-		self.timer_service.unset_timer(self, 2)
+		self.timer_service.unset_timer(self, 1)
 		
-	def __exit_action_main_region_controller_r1_normal_mode_door_high_close_flow(self):
+	def __exit_action_main_region_controller_r1_normal_mode_low_low_light_green(self):
+		"""Exit action for state 'Green'..
+		"""
+		#Exit action for state 'Green'.
+		self.red_light_observable.next(self.LOW)
+		
+	def __exit_action_main_region_controller_r1_normal_mode_high_high_door_close_flow(self):
 		"""Exit action for state 'Close Flow'..
 		"""
 		#Exit action for state 'Close Flow'.
+		self.timer_service.unset_timer(self, 2)
+		
+	def __exit_action_main_region_controller_r1_normal_mode_high_high_door_check_door(self):
+		"""Exit action for state 'CheckDoor'..
+		"""
+		#Exit action for state 'CheckDoor'.
 		self.timer_service.unset_timer(self, 3)
 		
-	def __enter_sequence_main_region_emergency_mode_default(self):
-		"""'default' enter sequence for state Emergency mode.
+	def __exit_action_main_region_controller_r1_normal_mode_high_high_light_green(self):
+		"""Exit action for state 'Green'..
 		"""
-		#'default' enter sequence for state Emergency mode
-		self.__entry_action_main_region_emergency_mode()
-		self.__state_vector[0] = self.State.main_region_emergency_mode
-		self.__state_conf_vector_position = 0
-		self.__state_conf_vector_changed = True
+		#Exit action for state 'Green'.
+		self.red_light_observable.next(self.HIGH)
 		
 	def __enter_sequence_main_region_controller_default(self):
 		"""'default' enter sequence for state Controller.
@@ -353,124 +401,144 @@ class LockController:
 		"""'default' enter sequence for state Normal Mode.
 		"""
 		#'default' enter sequence for state Normal Mode
-		self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_default()
-		self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_default()
-		self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
-		self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_low_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_high_default()
 		self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
 		self.__history_vector[0] = self.__state_vector[0]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_low_open_default(self):
-		"""'default' enter sequence for state Open.
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_default(self):
+		"""'default' enter sequence for state LOW.
 		"""
-		#'default' enter sequence for state Open
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_door_low_open
-		self.__state_conf_vector_position = 0
-		self.__state_conf_vector_changed = True
+		#'default' enter sequence for state LOW
+		self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_default()
 		self.__history_vector[1] = self.__state_vector[0]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_door_closed_default(self):
 		"""'default' enter sequence for state Closed.
 		"""
 		#'default' enter sequence for state Closed
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_door_low_closed
+		self.__entry_action_main_region_controller_r1_normal_mode_low_low_door_closed()
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_lowdoor_closed
 		self.__state_conf_vector_position = 0
 		self.__state_conf_vector_changed = True
-		self.__history_vector[1] = self.__state_vector[0]
+		self.__history_vector[2] = self.__state_vector[0]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_low_check_door_default(self):
-		"""'default' enter sequence for state CheckDoor.
-		"""
-		#'default' enter sequence for state CheckDoor
-		self.__entry_action_main_region_controller_r1_normal_mode_door_low_check_door()
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_door_low_check_door
-		self.__state_conf_vector_position = 0
-		self.__state_conf_vector_changed = True
-		self.__history_vector[1] = self.__state_vector[0]
-		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_low_close_flow_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow_default(self):
 		"""'default' enter sequence for state Close Flow.
 		"""
 		#'default' enter sequence for state Close Flow
-		self.__entry_action_main_region_controller_r1_normal_mode_door_low_close_flow()
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_door_low_close_flow
+		self.__entry_action_main_region_controller_r1_normal_mode_low_low_door_close_flow()
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow
 		self.__state_conf_vector_position = 0
 		self.__state_conf_vector_changed = True
-		self.__history_vector[1] = self.__state_vector[0]
+		self.__history_vector[2] = self.__state_vector[0]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_high_open_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door_default(self):
+		"""'default' enter sequence for state CheckDoor.
+		"""
+		#'default' enter sequence for state CheckDoor
+		self.__entry_action_main_region_controller_r1_normal_mode_low_low_door_check_door()
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door
+		self.__state_conf_vector_position = 0
+		self.__state_conf_vector_changed = True
+		self.__history_vector[2] = self.__state_vector[0]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_door_open_default(self):
 		"""'default' enter sequence for state Open.
 		"""
 		#'default' enter sequence for state Open
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_door_high_open
+		self.__entry_action_main_region_controller_r1_normal_mode_low_low_door_open()
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_lowdoor_open
+		self.__state_conf_vector_position = 0
+		self.__state_conf_vector_changed = True
+		self.__history_vector[2] = self.__state_vector[0]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_light_green_default(self):
+		"""'default' enter sequence for state Green.
+		"""
+		#'default' enter sequence for state Green
+		self.__entry_action_main_region_controller_r1_normal_mode_low_low_light_green()
+		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_low_lowlight_green
 		self.__state_conf_vector_position = 1
 		self.__state_conf_vector_changed = True
-		self.__history_vector[2] = self.__state_vector[1]
+		self.__history_vector[3] = self.__state_vector[1]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_light_red_default(self):
+		"""'default' enter sequence for state Red.
+		"""
+		#'default' enter sequence for state Red
+		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_low_lowlight_red
+		self.__state_conf_vector_position = 1
+		self.__state_conf_vector_changed = True
+		self.__history_vector[3] = self.__state_vector[1]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_default(self):
+		"""'default' enter sequence for state HIGH.
+		"""
+		#'default' enter sequence for state HIGH
+		self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_default()
+		self.__history_vector[4] = self.__state_vector[2]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_door_closed_default(self):
 		"""'default' enter sequence for state Closed.
 		"""
 		#'default' enter sequence for state Closed
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_door_high_closed
-		self.__state_conf_vector_position = 1
+		self.__entry_action_main_region_controller_r1_normal_mode_high_high_door_closed()
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhighdoor_closed
+		self.__state_conf_vector_position = 2
 		self.__state_conf_vector_changed = True
-		self.__history_vector[2] = self.__state_vector[1]
+		self.__history_vector[5] = self.__state_vector[2]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_high_check_door_default(self):
-		"""'default' enter sequence for state CheckDoor.
-		"""
-		#'default' enter sequence for state CheckDoor
-		self.__entry_action_main_region_controller_r1_normal_mode_door_high_check_door()
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_door_high_check_door
-		self.__state_conf_vector_position = 1
-		self.__state_conf_vector_changed = True
-		self.__history_vector[2] = self.__state_vector[1]
-		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_high_close_flow_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow_default(self):
 		"""'default' enter sequence for state Close Flow.
 		"""
 		#'default' enter sequence for state Close Flow
-		self.__entry_action_main_region_controller_r1_normal_mode_door_high_close_flow()
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_door_high_close_flow
-		self.__state_conf_vector_position = 1
+		self.__entry_action_main_region_controller_r1_normal_mode_high_high_door_close_flow()
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow
+		self.__state_conf_vector_position = 2
 		self.__state_conf_vector_changed = True
-		self.__history_vector[2] = self.__state_vector[1]
+		self.__history_vector[5] = self.__state_vector[2]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door_default(self):
+		"""'default' enter sequence for state CheckDoor.
+		"""
+		#'default' enter sequence for state CheckDoor
+		self.__entry_action_main_region_controller_r1_normal_mode_high_high_door_check_door()
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhighdoor_check_door
+		self.__state_conf_vector_position = 2
+		self.__state_conf_vector_changed = True
+		self.__history_vector[5] = self.__state_vector[2]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_door_open_default(self):
+		"""'default' enter sequence for state Open.
+		"""
+		#'default' enter sequence for state Open
+		self.__entry_action_main_region_controller_r1_normal_mode_high_high_door_open()
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhighdoor_open
+		self.__state_conf_vector_position = 2
+		self.__state_conf_vector_changed = True
+		self.__history_vector[5] = self.__state_vector[2]
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_light_green_default(self):
 		"""'default' enter sequence for state Green.
 		"""
 		#'default' enter sequence for state Green
-		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_light_low_green
-		self.__state_conf_vector_position = 2
+		self.__entry_action_main_region_controller_r1_normal_mode_high_high_light_green()
+		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_highhighlight_green
+		self.__state_conf_vector_position = 3
 		self.__state_conf_vector_changed = True
-		self.__history_vector[3] = self.__state_vector[2]
+		self.__history_vector[6] = self.__state_vector[3]
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_low_red_default(self):
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_light_red_default(self):
 		"""'default' enter sequence for state Red.
 		"""
 		#'default' enter sequence for state Red
-		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_light_low_red
-		self.__state_conf_vector_position = 2
-		self.__state_conf_vector_changed = True
-		self.__history_vector[3] = self.__state_vector[2]
-		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_high_green_default(self):
-		"""'default' enter sequence for state Green.
-		"""
-		#'default' enter sequence for state Green
-		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_light_high_green
+		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_highhighlight_red
 		self.__state_conf_vector_position = 3
 		self.__state_conf_vector_changed = True
-		self.__history_vector[4] = self.__state_vector[3]
-		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_high_red_default(self):
-		"""'default' enter sequence for state Red.
-		"""
-		#'default' enter sequence for state Red
-		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_light_high_red
-		self.__state_conf_vector_position = 3
-		self.__state_conf_vector_changed = True
-		self.__history_vector[4] = self.__state_vector[3]
+		self.__history_vector[6] = self.__state_vector[3]
 		
 	def __enter_sequence_main_region_controller_r1_normal_mode_update_level_update_default(self):
 		"""'default' enter sequence for state update.
@@ -479,7 +547,17 @@ class LockController:
 		self.__state_vector[4] = self.State.main_region_controller_r1normal_mode_update_level_update
 		self.__state_conf_vector_position = 4
 		self.__state_conf_vector_changed = True
-		self.__history_vector[5] = self.__state_vector[4]
+		self.__history_vector[7] = self.__state_vector[4]
+		
+	def __enter_sequence_main_region_controller_r1_emergency_mode_default(self):
+		"""'default' enter sequence for state Emergency mode.
+		"""
+		#'default' enter sequence for state Emergency mode
+		self.__entry_action_main_region_controller_r1_emergency_mode()
+		self.__state_vector[0] = self.State.main_region_controller_r1emergency_mode
+		self.__state_conf_vector_position = 0
+		self.__state_conf_vector_changed = True
+		self.__history_vector[0] = self.__state_vector[0]
 		
 	def __enter_sequence_main_region_default(self):
 		"""'default' enter sequence for region main region.
@@ -498,118 +576,217 @@ class LockController:
 		"""
 		#deep enterSequence with history in child r1
 		state = self.__history_vector[0]
-		if state == self.State.main_region_controller_r1normal_mode_door_low_open:
-			#enterSequence with history in child Normal Mode for leaf Open
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_closed:
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
 			#enterSequence with history in child Normal Mode for leaf Closed
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_high()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high()
 			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_check_door:
-			#enterSequence with history in child Normal Mode for leaf CheckDoor
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_close_flow:
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
 			#enterSequence with history in child Normal Mode for leaf Close Flow
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_door_high()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_low()
-			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_light_high()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high()
 			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			#enterSequence with history in child Normal Mode for leaf CheckDoor
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			#enterSequence with history in child Normal Mode for leaf Open
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_update_level()
+		elif state == self.State.main_region_controller_r1emergency_mode:
+			#enterSequence with history in child Emergency mode for leaf Emergency mode
+			self.__enter_sequence_main_region_controller_r1_emergency_mode_default()
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_low_default(self):
-		"""'default' enter sequence for region Door Low.
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_default(self):
+		"""'default' enter sequence for region Low.
 		"""
-		#'default' enter sequence for region Door Low
-		self.__react_main_region_controller_r1_normal_mode_door_low__entry_default()
+		#'default' enter sequence for region Low
+		self.__react_main_region_controller_r1_normal_mode_low__entry_default()
 		
-	def __deep_enter_sequence_main_region_controller_r1_normal_mode_door_low(self):
-		"""deep enterSequence with history in child Door Low.
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_low(self):
+		"""deep enterSequence with history in child Low.
 		"""
-		#deep enterSequence with history in child Door Low
+		#deep enterSequence with history in child Low
 		state = self.__history_vector[1]
-		if state == self.State.main_region_controller_r1normal_mode_door_low_open:
-			#enterSequence with history in child Open for leaf Open
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_open_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_closed:
-			#enterSequence with history in child Closed for leaf Closed
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_check_door:
-			#enterSequence with history in child CheckDoor for leaf CheckDoor
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_check_door_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_close_flow:
-			#enterSequence with history in child Close Flow for leaf Close Flow
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_close_flow_default()
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			#enterSequence with history in child LOW for leaf Closed
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_light()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			#enterSequence with history in child LOW for leaf Close Flow
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_light()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			#enterSequence with history in child LOW for leaf CheckDoor
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_light()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			#enterSequence with history in child LOW for leaf Open
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_light()
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_door_high_default(self):
-		"""'default' enter sequence for region Door High.
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_door_default(self):
+		"""'default' enter sequence for region Door.
 		"""
-		#'default' enter sequence for region Door High
-		self.__react_main_region_controller_r1_normal_mode_door_high__entry_default()
+		#'default' enter sequence for region Door
+		self.__react_main_region_controller_r1_normal_mode_low_low_door__entry_default()
 		
-	def __deep_enter_sequence_main_region_controller_r1_normal_mode_door_high(self):
-		"""deep enterSequence with history in child Door High.
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_door(self):
+		"""deep enterSequence with history in child Door.
 		"""
-		#deep enterSequence with history in child Door High
+		#deep enterSequence with history in child Door
 		state = self.__history_vector[2]
-		if state == self.State.main_region_controller_r1normal_mode_door_high_open:
-			#enterSequence with history in child Open for leaf Open
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_open_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_closed:
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
 			#enterSequence with history in child Closed for leaf Closed
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_check_door:
-			#enterSequence with history in child CheckDoor for leaf CheckDoor
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_check_door_default()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_close_flow:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_closed_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
 			#enterSequence with history in child Close Flow for leaf Close Flow
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_close_flow_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			#enterSequence with history in child CheckDoor for leaf CheckDoor
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			#enterSequence with history in child Open for leaf Open
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_open_default()
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_low_default(self):
-		"""'default' enter sequence for region Light Low.
+	def __shallow_enter_sequence_main_region_controller_r1_normal_mode_low_low_door(self):
+		"""shallow enterSequence with history in child Door.
 		"""
-		#'default' enter sequence for region Light Low
-		self.__react_main_region_controller_r1_normal_mode_light_low__entry_default()
+		#shallow enterSequence with history in child Door
+		state = self.__history_vector[2]
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_closed_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_open_default()
 		
-	def __deep_enter_sequence_main_region_controller_r1_normal_mode_light_low(self):
-		"""deep enterSequence with history in child Light Low.
+	def __enter_sequence_main_region_controller_r1_normal_mode_low_low_light_default(self):
+		"""'default' enter sequence for region Light.
 		"""
-		#deep enterSequence with history in child Light Low
+		#'default' enter sequence for region Light
+		self.__react_main_region_controller_r1_normal_mode_low_low_light__entry_default()
+		
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_low_low_light(self):
+		"""deep enterSequence with history in child Light.
+		"""
+		#deep enterSequence with history in child Light
 		state = self.__history_vector[3]
-		if state == self.State.main_region_controller_r1normal_mode_light_low_green:
+		if state == self.State.main_region_controller_r1normal_mode_low_lowlight_green:
 			#enterSequence with history in child Green for leaf Green
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default()
-		elif state == self.State.main_region_controller_r1normal_mode_light_low_red:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_green_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowlight_red:
 			#enterSequence with history in child Red for leaf Red
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_red_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_red_default()
 		
-	def __enter_sequence_main_region_controller_r1_normal_mode_light_high_default(self):
-		"""'default' enter sequence for region Light High.
+	def __shallow_enter_sequence_main_region_controller_r1_normal_mode_low_low_light(self):
+		"""shallow enterSequence with history in child Light.
 		"""
-		#'default' enter sequence for region Light High
-		self.__react_main_region_controller_r1_normal_mode_light_high__entry_default()
+		#shallow enterSequence with history in child Light
+		state = self.__history_vector[3]
+		if state == self.State.main_region_controller_r1normal_mode_low_lowlight_green:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_green_default()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowlight_red:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_red_default()
 		
-	def __deep_enter_sequence_main_region_controller_r1_normal_mode_light_high(self):
-		"""deep enterSequence with history in child Light High.
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_default(self):
+		"""'default' enter sequence for region HIGH.
 		"""
-		#deep enterSequence with history in child Light High
+		#'default' enter sequence for region HIGH
+		self.__react_main_region_controller_r1_normal_mode_high__entry_default()
+		
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_high(self):
+		"""deep enterSequence with history in child HIGH.
+		"""
+		#deep enterSequence with history in child HIGH
 		state = self.__history_vector[4]
-		if state == self.State.main_region_controller_r1normal_mode_light_high_green:
+		if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			#enterSequence with history in child HIGH for leaf Closed
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_light()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			#enterSequence with history in child HIGH for leaf Close Flow
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_light()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			#enterSequence with history in child HIGH for leaf CheckDoor
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_light()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+			#enterSequence with history in child HIGH for leaf Open
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_door()
+			self.__deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_light()
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_door_default(self):
+		"""'default' enter sequence for region Door.
+		"""
+		#'default' enter sequence for region Door
+		self.__react_main_region_controller_r1_normal_mode_high_high_door__entry_default()
+		
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_door(self):
+		"""deep enterSequence with history in child Door.
+		"""
+		#deep enterSequence with history in child Door
+		state = self.__history_vector[5]
+		if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			#enterSequence with history in child Closed for leaf Closed
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_closed_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			#enterSequence with history in child Close Flow for leaf Close Flow
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			#enterSequence with history in child CheckDoor for leaf CheckDoor
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+			#enterSequence with history in child Open for leaf Open
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_open_default()
+		
+	def __shallow_enter_sequence_main_region_controller_r1_normal_mode_high_high_door(self):
+		"""shallow enterSequence with history in child Door.
+		"""
+		#shallow enterSequence with history in child Door
+		state = self.__history_vector[5]
+		if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_closed_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_open_default()
+		
+	def __enter_sequence_main_region_controller_r1_normal_mode_high_high_light_default(self):
+		"""'default' enter sequence for region Light.
+		"""
+		#'default' enter sequence for region Light
+		self.__react_main_region_controller_r1_normal_mode_high_high_light__entry_default()
+		
+	def __deep_enter_sequence_main_region_controller_r1_normal_mode_high_high_light(self):
+		"""deep enterSequence with history in child Light.
+		"""
+		#deep enterSequence with history in child Light
+		state = self.__history_vector[6]
+		if state == self.State.main_region_controller_r1normal_mode_highhighlight_green:
 			#enterSequence with history in child Green for leaf Green
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_green_default()
-		elif state == self.State.main_region_controller_r1normal_mode_light_high_red:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_green_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighlight_red:
 			#enterSequence with history in child Red for leaf Red
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_red_default()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_red_default()
+		
+	def __shallow_enter_sequence_main_region_controller_r1_normal_mode_high_high_light(self):
+		"""shallow enterSequence with history in child Light.
+		"""
+		#shallow enterSequence with history in child Light
+		state = self.__history_vector[6]
+		if state == self.State.main_region_controller_r1normal_mode_highhighlight_green:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_green_default()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighlight_red:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_red_default()
 		
 	def __enter_sequence_main_region_controller_r1_normal_mode_update_level_default(self):
 		"""'default' enter sequence for region updateLevel.
@@ -621,116 +798,113 @@ class LockController:
 		"""deep enterSequence with history in child updateLevel.
 		"""
 		#deep enterSequence with history in child updateLevel
-		state = self.__history_vector[5]
+		state = self.__history_vector[7]
 		if state == self.State.main_region_controller_r1normal_mode_update_level_update:
 			#enterSequence with history in child update for leaf update
 			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_update_default()
 		
-	def __exit_sequence_main_region_emergency_mode(self):
-		"""Default exit sequence for state Emergency mode.
+	def __exit_sequence_main_region_controller_r1_normal_mode(self):
+		"""Default exit sequence for state Normal Mode.
 		"""
-		#Default exit sequence for state Emergency mode
-		self.__state_vector[0] = self.State.null_state
-		self.__state_conf_vector_position = 0
-		
-	def __exit_sequence_main_region_controller(self):
-		"""Default exit sequence for state Controller.
-		"""
-		#Default exit sequence for state Controller
-		self.__exit_sequence_main_region_controller_r1()
-		self.__state_vector[0] = self.State.null_state
-		self.__state_vector[1] = self.State.null_state
-		self.__state_vector[2] = self.State.null_state
-		self.__state_vector[3] = self.State.null_state
-		self.__state_vector[4] = self.State.null_state
+		#Default exit sequence for state Normal Mode
+		self.__exit_sequence_main_region_controller_r1_normal_mode_low()
+		self.__exit_sequence_main_region_controller_r1_normal_mode_high()
+		self.__exit_sequence_main_region_controller_r1_normal_mode_update_level()
+		self.__state_vector[0] = self.State.main_region_controller
+		self.__state_vector[1] = self.State.main_region_controller
+		self.__state_vector[2] = self.State.main_region_controller
+		self.__state_vector[3] = self.State.main_region_controller
+		self.__state_vector[4] = self.State.main_region_controller
 		self.__state_conf_vector_position = 4
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_low_open(self):
-		"""Default exit sequence for state Open.
-		"""
-		#Default exit sequence for state Open
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 0
-		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_low_closed(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_door_closed(self):
 		"""Default exit sequence for state Closed.
 		"""
 		#Default exit sequence for state Closed
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_low
 		self.__state_conf_vector_position = 0
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_low_check_door(self):
-		"""Default exit sequence for state CheckDoor.
-		"""
-		#Default exit sequence for state CheckDoor
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 0
-		self.__exit_action_main_region_controller_r1_normal_mode_door_low_check_door()
-		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_low_close_flow(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow(self):
 		"""Default exit sequence for state Close Flow.
 		"""
 		#Default exit sequence for state Close Flow
-		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_low
 		self.__state_conf_vector_position = 0
-		self.__exit_action_main_region_controller_r1_normal_mode_door_low_close_flow()
+		self.__exit_action_main_region_controller_r1_normal_mode_low_low_door_close_flow()
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_high_open(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door(self):
+		"""Default exit sequence for state CheckDoor.
+		"""
+		#Default exit sequence for state CheckDoor
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_low
+		self.__state_conf_vector_position = 0
+		self.__exit_action_main_region_controller_r1_normal_mode_low_low_door_check_door()
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_door_open(self):
 		"""Default exit sequence for state Open.
 		"""
 		#Default exit sequence for state Open
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 1
+		self.__state_vector[0] = self.State.main_region_controller_r1normal_mode_low_low
+		self.__state_conf_vector_position = 0
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_high_closed(self):
-		"""Default exit sequence for state Closed.
-		"""
-		#Default exit sequence for state Closed
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 1
-		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_high_check_door(self):
-		"""Default exit sequence for state CheckDoor.
-		"""
-		#Default exit sequence for state CheckDoor
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 1
-		self.__exit_action_main_region_controller_r1_normal_mode_door_high_check_door()
-		
-	def __exit_sequence_main_region_controller_r1_normal_mode_door_high_close_flow(self):
-		"""Default exit sequence for state Close Flow.
-		"""
-		#Default exit sequence for state Close Flow
-		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 1
-		self.__exit_action_main_region_controller_r1_normal_mode_door_high_close_flow()
-		
-	def __exit_sequence_main_region_controller_r1_normal_mode_light_low_green(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_light_green(self):
 		"""Default exit sequence for state Green.
 		"""
 		#Default exit sequence for state Green
-		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode
-		self.__state_conf_vector_position = 2
+		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_low_low
+		self.__state_conf_vector_position = 1
+		self.__exit_action_main_region_controller_r1_normal_mode_low_low_light_green()
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_light_low_red(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_low_low_light_red(self):
 		"""Default exit sequence for state Red.
 		"""
 		#Default exit sequence for state Red
-		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode
+		self.__state_vector[1] = self.State.main_region_controller_r1normal_mode_low_low
+		self.__state_conf_vector_position = 1
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_door_closed(self):
+		"""Default exit sequence for state Closed.
+		"""
+		#Default exit sequence for state Closed
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhigh
 		self.__state_conf_vector_position = 2
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_light_high_green(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow(self):
+		"""Default exit sequence for state Close Flow.
+		"""
+		#Default exit sequence for state Close Flow
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhigh
+		self.__state_conf_vector_position = 2
+		self.__exit_action_main_region_controller_r1_normal_mode_high_high_door_close_flow()
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door(self):
+		"""Default exit sequence for state CheckDoor.
+		"""
+		#Default exit sequence for state CheckDoor
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhigh
+		self.__state_conf_vector_position = 2
+		self.__exit_action_main_region_controller_r1_normal_mode_high_high_door_check_door()
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_door_open(self):
+		"""Default exit sequence for state Open.
+		"""
+		#Default exit sequence for state Open
+		self.__state_vector[2] = self.State.main_region_controller_r1normal_mode_highhigh
+		self.__state_conf_vector_position = 2
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_light_green(self):
 		"""Default exit sequence for state Green.
 		"""
 		#Default exit sequence for state Green
-		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode
+		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_highhigh
 		self.__state_conf_vector_position = 3
+		self.__exit_action_main_region_controller_r1_normal_mode_high_high_light_green()
 		
-	def __exit_sequence_main_region_controller_r1_normal_mode_light_high_red(self):
+	def __exit_sequence_main_region_controller_r1_normal_mode_high_high_light_red(self):
 		"""Default exit sequence for state Red.
 		"""
 		#Default exit sequence for state Red
-		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode
+		self.__state_vector[3] = self.State.main_region_controller_r1normal_mode_highhigh
 		self.__state_conf_vector_position = 3
 		
 	def __exit_sequence_main_region_controller_r1_normal_mode_update_level_update(self):
@@ -740,105 +914,117 @@ class LockController:
 		self.__state_vector[4] = self.State.main_region_controller_r1normal_mode
 		self.__state_conf_vector_position = 4
 		
+	def __exit_sequence_main_region_controller_r1_emergency_mode(self):
+		"""Default exit sequence for state Emergency mode.
+		"""
+		#Default exit sequence for state Emergency mode
+		self.__state_vector[0] = self.State.main_region_controller
+		self.__state_conf_vector_position = 0
+		
 	def __exit_sequence_main_region(self):
 		"""Default exit sequence for region main region.
 		"""
 		#Default exit sequence for region main region
 		state = self.__state_vector[0]
-		if state == self.State.main_region_emergency_mode:
-			self.__exit_sequence_main_region_emergency_mode()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_open:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_open()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_closed:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_closed()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_check_door:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_check_door()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_close_flow:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_close_flow()
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_closed()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_open()
+		elif state == self.State.main_region_controller_r1emergency_mode:
+			self.__exit_sequence_main_region_controller_r1_emergency_mode()
 		state = self.__state_vector[1]
-		if state == self.State.main_region_controller_r1normal_mode_door_high_open:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_open()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_closed:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_closed()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_check_door:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_check_door()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_close_flow:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_close_flow()
+		if state == self.State.main_region_controller_r1normal_mode_low_lowlight_green:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_green()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowlight_red:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_red()
 		state = self.__state_vector[2]
-		if state == self.State.main_region_controller_r1normal_mode_light_low_green:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_green()
-		elif state == self.State.main_region_controller_r1normal_mode_light_low_red:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_red()
+		if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_closed()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_open()
 		state = self.__state_vector[3]
-		if state == self.State.main_region_controller_r1normal_mode_light_high_green:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_green()
-		elif state == self.State.main_region_controller_r1normal_mode_light_high_red:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_red()
+		if state == self.State.main_region_controller_r1normal_mode_highhighlight_green:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_green()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighlight_red:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_red()
 		state = self.__state_vector[4]
 		if state == self.State.main_region_controller_r1normal_mode_update_level_update:
 			self.__exit_sequence_main_region_controller_r1_normal_mode_update_level_update()
 		
-	def __exit_sequence_main_region_controller_r1(self):
-		"""Default exit sequence for region r1.
+	def __exit_sequence_main_region_controller_r1_normal_mode_low(self):
+		"""Default exit sequence for region Low.
 		"""
-		#Default exit sequence for region r1
+		#Default exit sequence for region Low
 		state = self.__state_vector[0]
-		if state == self.State.main_region_controller_r1normal_mode_door_low_open:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_open()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_closed:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_closed()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_check_door:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_check_door()
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_close_flow:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_close_flow()
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_closed()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_open()
 		state = self.__state_vector[1]
-		if state == self.State.main_region_controller_r1normal_mode_door_high_open:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_open()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_closed:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_closed()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_check_door:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_check_door()
-		elif state == self.State.main_region_controller_r1normal_mode_door_high_close_flow:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_close_flow()
+		if state == self.State.main_region_controller_r1normal_mode_low_lowlight_green:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_green()
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowlight_red:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_red()
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_high(self):
+		"""Default exit sequence for region HIGH.
+		"""
+		#Default exit sequence for region HIGH
 		state = self.__state_vector[2]
-		if state == self.State.main_region_controller_r1normal_mode_light_low_green:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_green()
-		elif state == self.State.main_region_controller_r1normal_mode_light_low_red:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_red()
+		if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_closed()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_open()
 		state = self.__state_vector[3]
-		if state == self.State.main_region_controller_r1normal_mode_light_high_green:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_green()
-		elif state == self.State.main_region_controller_r1normal_mode_light_high_red:
-			self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_red()
+		if state == self.State.main_region_controller_r1normal_mode_highhighlight_green:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_green()
+		elif state == self.State.main_region_controller_r1normal_mode_highhighlight_red:
+			self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_red()
+		
+	def __exit_sequence_main_region_controller_r1_normal_mode_update_level(self):
+		"""Default exit sequence for region updateLevel.
+		"""
+		#Default exit sequence for region updateLevel
 		state = self.__state_vector[4]
 		if state == self.State.main_region_controller_r1normal_mode_update_level_update:
 			self.__exit_sequence_main_region_controller_r1_normal_mode_update_level_update()
 		
-	def __react_main_region__choice_0(self):
+	def __react_main_region_controller_r1_normal_mode_low_low_door__choice_0(self):
 		"""The reactions of state null..
 		"""
 		#The reactions of state null.
-		if self.__pending and self.__open_door == self.HIGH:
-			self.open_flow_observable.next(self.LOW)
-			self.__entry_action_main_region_controller()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
-			self.__history_vector[0] = self.__state_vector[0]
-		elif self.__pending and self.__open_door == self.LOW:
-			self.open_flow_observable.next(self.HIGH)
-			self.__entry_action_main_region_controller()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_default()
-			self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_default()
-			self.__history_vector[0] = self.__state_vector[0]
+		if (self.__previous_lvl - self.LOW_LVL) > -(30) and (self.__previous_lvl - self.LOW_LVL) < 30:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_open_default()
 		else:
-			self.__entry_action_main_region_controller()
-			self.__react_main_region_controller_r1_history()
+			self.raise_low_light_red()
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_closed_default()
+		
+	def __react_main_region_controller_r1__choice_0(self):
+		"""The reactions of state null..
+		"""
+		#The reactions of state null.
+		if self.__pending:
+			self.raise_request_lvl_change()
+			self.__pending = False
+			self.__enter_sequence_main_region_controller_r1_normal_mode_default()
+		else:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_default()
 		
 	def __react_main_region__entry_default(self):
 		"""Default react sequence for initial entry .
@@ -846,29 +1032,57 @@ class LockController:
 		#Default react sequence for initial entry 
 		self.__enter_sequence_main_region_controller_default()
 		
-	def __react_main_region_controller_r1_normal_mode_door_low__entry_default(self):
-		"""Default react sequence for initial entry .
+	def __react_main_region_controller_r1_normal_mode_low_low_door__entry_default(self):
+		"""Default react sequence for shallow history entry .
 		"""
-		#Default react sequence for initial entry 
-		self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_open_default()
+		#Default react sequence for shallow history entry 
+		#Enter the region with shallow history
+		if self.__history_vector[2] is not self.State.null_state:
+			self.__shallow_enter_sequence_main_region_controller_r1_normal_mode_low_low_door()
+		else:
+			self.__react_main_region_controller_r1_normal_mode_low_low_door__choice_0()
 		
-	def __react_main_region_controller_r1_normal_mode_door_high__entry_default(self):
-		"""Default react sequence for initial entry .
+	def __react_main_region_controller_r1_normal_mode_low_low_light__entry_default(self):
+		"""Default react sequence for shallow history entry .
 		"""
-		#Default react sequence for initial entry 
-		self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default()
+		#Default react sequence for shallow history entry 
+		#Enter the region with shallow history
+		if self.__history_vector[3] is not self.State.null_state:
+			self.__shallow_enter_sequence_main_region_controller_r1_normal_mode_low_low_light()
+		else:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_green_default()
 		
-	def __react_main_region_controller_r1_normal_mode_light_low__entry_default(self):
+	def __react_main_region_controller_r1_normal_mode_low__entry_default(self):
 		"""Default react sequence for initial entry .
 		"""
 		#Default react sequence for initial entry 
-		self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_default()
 		
-	def __react_main_region_controller_r1_normal_mode_light_high__entry_default(self):
+	def __react_main_region_controller_r1_normal_mode_high_high_door__entry_default(self):
+		"""Default react sequence for shallow history entry .
+		"""
+		#Default react sequence for shallow history entry 
+		#Enter the region with shallow history
+		if self.__history_vector[5] is not self.State.null_state:
+			self.__shallow_enter_sequence_main_region_controller_r1_normal_mode_high_high_door()
+		else:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_closed_default()
+		
+	def __react_main_region_controller_r1_normal_mode_high_high_light__entry_default(self):
+		"""Default react sequence for shallow history entry .
+		"""
+		#Default react sequence for shallow history entry 
+		#Enter the region with shallow history
+		if self.__history_vector[6] is not self.State.null_state:
+			self.__shallow_enter_sequence_main_region_controller_r1_normal_mode_high_high_light()
+		else:
+			self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_red_default()
+		
+	def __react_main_region_controller_r1_normal_mode_high__entry_default(self):
 		"""Default react sequence for initial entry .
 		"""
 		#Default react sequence for initial entry 
-		self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_red_default()
+		self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_default()
 		
 	def __react_main_region_controller_r1_normal_mode_update_level__entry_default(self):
 		"""Default react sequence for initial entry .
@@ -877,15 +1091,9 @@ class LockController:
 		self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_update_default()
 		
 	def __react_main_region_controller_r1__entry_default(self):
-		"""Default react sequence for initial entry .
+		"""Default react sequence for deep history entry .
 		"""
-		#Default react sequence for initial entry 
-		self.__enter_sequence_main_region_controller_r1_normal_mode_default()
-		
-	def __react_main_region_controller_r1_history(self):
-		"""Default react sequence for deep history entry history.
-		"""
-		#Default react sequence for deep history entry history
+		#Default react sequence for deep history entry 
 		#Enter the region with deep history
 		if self.__history_vector[0] is not self.State.null_state:
 			self.__deep_enter_sequence_main_region_controller_r1()
@@ -899,240 +1107,216 @@ class LockController:
 		return transitioned_before
 	
 	
-	def __main_region_emergency_mode_react(self, transitioned_before):
-		"""Implementation of __main_region_emergency_mode_react function.
-		"""
-		#The reactions of state Emergency mode.
-		transitioned_after = self.__react(transitioned_before)
-		if transitioned_after < 0:
-			if self.request_lvl_change:
-				self.__exit_sequence_main_region_emergency_mode()
-				self.set_request_pending_observable.next(True)
-				self.__pending = True
-				self.__enter_sequence_main_region_emergency_mode_default()
-				transitioned_after = 0
-			elif self.resume:
-				self.__exit_sequence_main_region_emergency_mode()
-				self.__react_main_region__choice_0()
-				transitioned_after = 0
-		return transitioned_after
-	
-	
 	def __main_region_controller_react(self, transitioned_before):
 		"""Implementation of __main_region_controller_react function.
 		"""
 		#The reactions of state Controller.
-		transitioned_after = self.__react(transitioned_before)
-		if transitioned_after < 0:
-			if (self.water_lvl) and ((self.water_lvl_value - self.__previous_lvl) > 1000 or (self.__previous_lvl - self.water_lvl_value) > 1000):
-				self.__exit_sequence_main_region_controller()
-				self.__enter_sequence_main_region_emergency_mode_default()
-				transitioned_after = 4
-		return transitioned_after
+		return self.__react(transitioned_before)
 	
 	
 	def __main_region_controller_r1_normal_mode_react(self, transitioned_before):
 		"""Implementation of __main_region_controller_r1_normal_mode_react function.
 		"""
 		#The reactions of state Normal Mode.
-		return self.__main_region_controller_react(transitioned_before)
-	
-	
-	def __main_region_controller_r1_normal_mode_door_low_open_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_low_open_react function.
-		"""
-		#The reactions of state Open.
-		transitioned_after = self.__main_region_controller_r1_normal_mode_react(transitioned_before)
+		transitioned_after = self.__main_region_controller_react(transitioned_before)
 		if transitioned_after < 0:
-			if self.close_door_low:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_open()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_check_door_default()
-				transitioned_after = 0
+			if (self.water_lvl) and ((self.water_lvl_value - self.__previous_lvl) > 1000 or (self.__previous_lvl - self.water_lvl_value) > 1000):
+				self.__exit_sequence_main_region_controller_r1_normal_mode()
+				self.__enter_sequence_main_region_controller_r1_emergency_mode_default()
+				transitioned_after = 4
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_door_low_closed_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_low_closed_react function.
+	def __main_region_controller_r1_normal_mode_low_low_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_react function.
+		"""
+		#The reactions of state LOW.
+		return self.__main_region_controller_r1_normal_mode_react(transitioned_before)
+	
+	
+	def __main_region_controller_r1_normal_mode_low_low_door_closed_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_door_closed_react function.
 		"""
 		#The reactions of state Closed.
-		transitioned_after = self.__main_region_controller_r1_normal_mode_react(transitioned_before)
+		transitioned_after = self.__main_region_controller_r1_normal_mode_low_low_react(transitioned_before)
 		if transitioned_after < 0:
-			if (self.water_lvl) and ((self.water_lvl_value - self.LOW_LVL) > -(30) and (self.water_lvl_value - self.LOW_LVL) < 30):
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_closed()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_close_flow_default()
+			if (self.water_lvl) and ((self.water_lvl_value - self.LOW_LVL) > -(30) and (self.water_lvl_value - self.LOW_LVL) < 30 and self.__target_state == self.LOW):
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_closed()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow_default()
 				transitioned_after = 0
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_door_low_check_door_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_low_check_door_react function.
+	def __main_region_controller_r1_normal_mode_low_low_door_close_flow_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_door_close_flow_react function.
 		"""
-		#The reactions of state CheckDoor.
-		transitioned_after = self.__main_region_controller_r1_normal_mode_react(transitioned_before)
+		#The reactions of state Close Flow.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_low_low_react(transitioned_before)
 		if transitioned_after < 0:
 			if self.__time_events[0]:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_check_door()
-				self.close_doors_observable.next(self.LOW)
-				self.open_flow_observable.next(self.HIGH)
-				self.__time_events[0] = False
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_closed_default()
-				transitioned_after = 0
-			elif self.door_obstructed:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_check_door()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_check_door_default()
-				transitioned_after = 0
-		return transitioned_after
-	
-	
-	def __main_region_controller_r1_normal_mode_door_low_close_flow_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_low_close_flow_react function.
-		"""
-		#The reactions of state Close Flow.
-		transitioned_after = self.__main_region_controller_r1_normal_mode_react(transitioned_before)
-		if transitioned_after < 0:
-			if self.__time_events[1]:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_low_close_flow()
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_close_flow()
 				self.close_flow_observable.next(self.LOW)
 				self.set_request_pending_observable.next(False)
-				self.raise_open_door_low()
-				self.open_doors_observable.next(self.LOW)
-				self.__pending = False
-				self.__open_door = self.LOW
-				self.__time_events[1] = False
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_low_open_default()
+				self.__time_events[0] = False
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_open_default()
 				transitioned_after = 0
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_door_high_open_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_high_open_react function.
-		"""
-		#The reactions of state Open.
-		transitioned_after = transitioned_before
-		if transitioned_after < 1:
-			if self.close_door_high:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_open()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_check_door_default()
-				transitioned_after = 1
-		return transitioned_after
-	
-	
-	def __main_region_controller_r1_normal_mode_door_high_closed_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_high_closed_react function.
-		"""
-		#The reactions of state Closed.
-		transitioned_after = transitioned_before
-		if transitioned_after < 1:
-			if (self.water_lvl) and ((self.water_lvl_value - self.HIGH_LVL) > -(30) and (self.water_lvl_value - self.HIGH_LVL) < 30):
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_closed()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_close_flow_default()
-				transitioned_after = 1
-		return transitioned_after
-	
-	
-	def __main_region_controller_r1_normal_mode_door_high_check_door_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_high_check_door_react function.
+	def __main_region_controller_r1_normal_mode_low_low_door_check_door_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_door_check_door_react function.
 		"""
 		#The reactions of state CheckDoor.
-		transitioned_after = transitioned_before
-		if transitioned_after < 1:
-			if self.__time_events[2]:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_check_door()
-				self.close_doors_observable.next(self.HIGH)
-				self.open_flow_observable.next(self.LOW)
-				self.__time_events[2] = False
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_closed_default()
-				transitioned_after = 1
+		transitioned_after = self.__main_region_controller_r1_normal_mode_low_low_react(transitioned_before)
+		if transitioned_after < 0:
+			if self.__time_events[1]:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door()
+				self.close_doors_observable.next(self.LOW)
+				self.__time_events[1] = False
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_closed_default()
+				transitioned_after = 0
 			elif self.door_obstructed:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_check_door()
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_check_door_default()
-				transitioned_after = 1
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door_default()
+				transitioned_after = 0
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_door_high_close_flow_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_door_high_close_flow_react function.
+	def __main_region_controller_r1_normal_mode_low_low_door_open_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_door_open_react function.
 		"""
-		#The reactions of state Close Flow.
-		transitioned_after = transitioned_before
-		if transitioned_after < 1:
-			if self.__time_events[3]:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_door_high_close_flow()
-				self.close_flow_observable.next(self.HIGH)
-				self.set_request_pending_observable.next(False)
-				self.raise_open_door_high()
-				self.open_doors_observable.next(self.HIGH)
-				self.__pending = False
-				self.__open_door = self.HIGH
-				self.__time_events[3] = False
-				self.__enter_sequence_main_region_controller_r1_normal_mode_door_high_open_default()
-				transitioned_after = 1
+		#The reactions of state Open.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_low_low_react(transitioned_before)
+		if transitioned_after < 0:
+			if self.request_lvl_change:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_door_open()
+				self.raise_low_light_red()
+				self.set_request_pending_observable.next(True)
+				self.__target_state = self.HIGH
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_door_check_door_default()
+				transitioned_after = 0
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_light_low_green_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_light_low_green_react function.
+	def __main_region_controller_r1_normal_mode_low_low_light_green_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_light_green_react function.
 		"""
 		#The reactions of state Green.
 		transitioned_after = transitioned_before
-		if transitioned_after < 2:
-			if self.request_lvl_change:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_green()
-				self.raise_close_door_low()
-				self.red_light_observable.next(self.LOW)
-				self.set_request_pending_observable.next(True)
-				self.__pending = True
-				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_red_default()
-				transitioned_after = 2
-			elif self.open_door_low:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_green()
-				self.green_light_observable.next(self.LOW)
-				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default()
-				transitioned_after = 2
+		if transitioned_after < 1:
+			if self.low_light_red:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_green()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_red_default()
+				transitioned_after = 1
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_light_low_red_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_light_low_red_react function.
+	def __main_region_controller_r1_normal_mode_low_low_light_red_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_low_low_light_red_react function.
 		"""
 		#The reactions of state Red.
 		transitioned_after = transitioned_before
+		if transitioned_after < 1:
+			if self.low_light_green:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_low_low_light_red()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_low_low_light_green_default()
+				transitioned_after = 1
+		return transitioned_after
+	
+	
+	def __main_region_controller_r1_normal_mode_high_high_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_react function.
+		"""
+		#The reactions of state HIGH.
+		return transitioned_before
+	
+	
+	def __main_region_controller_r1_normal_mode_high_high_door_closed_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_door_closed_react function.
+		"""
+		#The reactions of state Closed.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_high_high_react(transitioned_before)
 		if transitioned_after < 2:
-			if self.open_door_low:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_light_low_red()
-				self.green_light_observable.next(self.LOW)
-				self.__enter_sequence_main_region_controller_r1_normal_mode_light_low_green_default()
+			if (self.water_lvl) and ((self.water_lvl_value - self.HIGH_LVL) > -(30) and (self.water_lvl_value - self.HIGH_LVL) < 30 and self.__target_state == self.HIGH):
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_closed()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow_default()
 				transitioned_after = 2
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_light_high_green_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_light_high_green_react function.
+	def __main_region_controller_r1_normal_mode_high_high_door_close_flow_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_door_close_flow_react function.
+		"""
+		#The reactions of state Close Flow.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_high_high_react(transitioned_before)
+		if transitioned_after < 2:
+			if self.__time_events[2]:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_close_flow()
+				self.close_flow_observable.next(self.HIGH)
+				self.set_request_pending_observable.next(False)
+				self.__time_events[2] = False
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_open_default()
+				transitioned_after = 2
+		return transitioned_after
+	
+	
+	def __main_region_controller_r1_normal_mode_high_high_door_check_door_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_door_check_door_react function.
+		"""
+		#The reactions of state CheckDoor.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_high_high_react(transitioned_before)
+		if transitioned_after < 2:
+			if self.__time_events[3]:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door()
+				self.close_doors_observable.next(self.HIGH)
+				self.__time_events[3] = False
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_closed_default()
+				transitioned_after = 2
+			elif self.door_obstructed:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door_default()
+				transitioned_after = 2
+		return transitioned_after
+	
+	
+	def __main_region_controller_r1_normal_mode_high_high_door_open_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_door_open_react function.
+		"""
+		#The reactions of state Open.
+		transitioned_after = self.__main_region_controller_r1_normal_mode_high_high_react(transitioned_before)
+		if transitioned_after < 2:
+			if self.request_lvl_change:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_door_open()
+				self.raise_high_light_red()
+				self.set_request_pending_observable.next(True)
+				self.__target_state = self.LOW
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_door_check_door_default()
+				transitioned_after = 2
+		return transitioned_after
+	
+	
+	def __main_region_controller_r1_normal_mode_high_high_light_green_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_light_green_react function.
 		"""
 		#The reactions of state Green.
 		transitioned_after = transitioned_before
 		if transitioned_after < 3:
-			if self.request_lvl_change:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_green()
-				self.raise_close_door_high()
-				self.red_light_observable.next(self.HIGH)
-				self.set_request_pending_observable.next(True)
-				self.__pending = True
-				self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_red_default()
+			if self.high_light_red:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_green()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_red_default()
 				transitioned_after = 3
 		return transitioned_after
 	
 	
-	def __main_region_controller_r1_normal_mode_light_high_red_react(self, transitioned_before):
-		"""Implementation of __main_region_controller_r1_normal_mode_light_high_red_react function.
+	def __main_region_controller_r1_normal_mode_high_high_light_red_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_normal_mode_high_high_light_red_react function.
 		"""
 		#The reactions of state Red.
 		transitioned_after = transitioned_before
 		if transitioned_after < 3:
-			if self.open_door_high:
-				self.__exit_sequence_main_region_controller_r1_normal_mode_light_high_red()
-				self.green_light_observable.next(self.HIGH)
-				self.__enter_sequence_main_region_controller_r1_normal_mode_light_high_green_default()
+			if self.high_light_green:
+				self.__exit_sequence_main_region_controller_r1_normal_mode_high_high_light_red()
+				self.__enter_sequence_main_region_controller_r1_normal_mode_high_high_light_green_default()
 				transitioned_after = 3
 		return transitioned_after
 	
@@ -1148,6 +1332,25 @@ class LockController:
 				self.__previous_lvl = self.water_lvl_value
 				self.__enter_sequence_main_region_controller_r1_normal_mode_update_level_update_default()
 				transitioned_after = 4
+		return transitioned_after
+	
+	
+	def __main_region_controller_r1_emergency_mode_react(self, transitioned_before):
+		"""Implementation of __main_region_controller_r1_emergency_mode_react function.
+		"""
+		#The reactions of state Emergency mode.
+		transitioned_after = self.__main_region_controller_react(transitioned_before)
+		if transitioned_after < 0:
+			if self.request_lvl_change:
+				self.__exit_sequence_main_region_controller_r1_emergency_mode()
+				self.set_request_pending_observable.next(True)
+				self.__pending = True
+				self.__enter_sequence_main_region_controller_r1_emergency_mode_default()
+				transitioned_after = 0
+			elif self.resume:
+				self.__exit_sequence_main_region_controller_r1_emergency_mode()
+				self.__react_main_region_controller_r1__choice_0()
+				transitioned_after = 0
 		return transitioned_after
 	
 	
@@ -1167,10 +1370,10 @@ class LockController:
 	def __clear_internal_events(self):
 		"""Implementation of __clear_internal_events function.
 		"""
-		self.open_door_high = False
-		self.open_door_low = False
-		self.close_door_low = False
-		self.close_door_high = False
+		self.low_light_green = False
+		self.low_light_red = False
+		self.high_light_green = False
+		self.high_light_red = False
 	
 	
 	def __micro_step(self):
@@ -1179,38 +1382,38 @@ class LockController:
 		transitioned = -1
 		self.__state_conf_vector_position = 0
 		state = self.__state_vector[0]
-		if state == self.State.main_region_emergency_mode:
-			transitioned = self.__main_region_emergency_mode_react(transitioned)
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_open:
-			transitioned = self.__main_region_controller_r1_normal_mode_door_low_open_react(transitioned)
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_closed:
-			transitioned = self.__main_region_controller_r1_normal_mode_door_low_closed_react(transitioned)
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_check_door:
-			transitioned = self.__main_region_controller_r1_normal_mode_door_low_check_door_react(transitioned)
-		elif state == self.State.main_region_controller_r1normal_mode_door_low_close_flow:
-			transitioned = self.__main_region_controller_r1_normal_mode_door_low_close_flow_react(transitioned)
+		if state == self.State.main_region_controller_r1normal_mode_low_lowdoor_closed:
+			transitioned = self.__main_region_controller_r1_normal_mode_low_low_door_closed_react(transitioned)
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_close_flow:
+			transitioned = self.__main_region_controller_r1_normal_mode_low_low_door_close_flow_react(transitioned)
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_check_door:
+			transitioned = self.__main_region_controller_r1_normal_mode_low_low_door_check_door_react(transitioned)
+		elif state == self.State.main_region_controller_r1normal_mode_low_lowdoor_open:
+			transitioned = self.__main_region_controller_r1_normal_mode_low_low_door_open_react(transitioned)
+		elif state == self.State.main_region_controller_r1emergency_mode:
+			transitioned = self.__main_region_controller_r1_emergency_mode_react(transitioned)
 		if self.__state_conf_vector_position < 1:
 			state = self.__state_vector[1]
-			if state == self.State.main_region_controller_r1normal_mode_door_high_open:
-				transitioned = self.__main_region_controller_r1_normal_mode_door_high_open_react(transitioned)
-			elif state == self.State.main_region_controller_r1normal_mode_door_high_closed:
-				transitioned = self.__main_region_controller_r1_normal_mode_door_high_closed_react(transitioned)
-			elif state == self.State.main_region_controller_r1normal_mode_door_high_check_door:
-				transitioned = self.__main_region_controller_r1_normal_mode_door_high_check_door_react(transitioned)
-			elif state == self.State.main_region_controller_r1normal_mode_door_high_close_flow:
-				transitioned = self.__main_region_controller_r1_normal_mode_door_high_close_flow_react(transitioned)
+			if state == self.State.main_region_controller_r1normal_mode_low_lowlight_green:
+				transitioned = self.__main_region_controller_r1_normal_mode_low_low_light_green_react(transitioned)
+			elif state == self.State.main_region_controller_r1normal_mode_low_lowlight_red:
+				transitioned = self.__main_region_controller_r1_normal_mode_low_low_light_red_react(transitioned)
 		if self.__state_conf_vector_position < 2:
 			state = self.__state_vector[2]
-			if state == self.State.main_region_controller_r1normal_mode_light_low_green:
-				transitioned = self.__main_region_controller_r1_normal_mode_light_low_green_react(transitioned)
-			elif state == self.State.main_region_controller_r1normal_mode_light_low_red:
-				transitioned = self.__main_region_controller_r1_normal_mode_light_low_red_react(transitioned)
+			if state == self.State.main_region_controller_r1normal_mode_highhighdoor_closed:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_door_closed_react(transitioned)
+			elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_close_flow:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_door_close_flow_react(transitioned)
+			elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_check_door:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_door_check_door_react(transitioned)
+			elif state == self.State.main_region_controller_r1normal_mode_highhighdoor_open:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_door_open_react(transitioned)
 		if self.__state_conf_vector_position < 3:
 			state = self.__state_vector[3]
-			if state == self.State.main_region_controller_r1normal_mode_light_high_green:
-				transitioned = self.__main_region_controller_r1_normal_mode_light_high_green_react(transitioned)
-			elif state == self.State.main_region_controller_r1normal_mode_light_high_red:
-				transitioned = self.__main_region_controller_r1_normal_mode_light_high_red_react(transitioned)
+			if state == self.State.main_region_controller_r1normal_mode_highhighlight_green:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_light_green_react(transitioned)
+			elif state == self.State.main_region_controller_r1normal_mode_highhighlight_red:
+				transitioned = self.__main_region_controller_r1_normal_mode_high_high_light_red_react(transitioned)
 		if self.__state_conf_vector_position < 4:
 			state = self.__state_vector[4]
 			if state == self.State.main_region_controller_r1normal_mode_update_level_update:
@@ -1268,7 +1471,11 @@ class LockController:
 		#Default exit sequence for statechart LockController
 		self.__exit_sequence_main_region()
 		self.__state_vector[0] = self.State.null_state
-		self.__state_conf_vector_position = 0
+		self.__state_vector[1] = self.State.null_state
+		self.__state_vector[2] = self.State.null_state
+		self.__state_vector[3] = self.State.null_state
+		self.__state_vector[4] = self.State.null_state
+		self.__state_conf_vector_position = 4
 		self.__is_executing = False
 	
 	
