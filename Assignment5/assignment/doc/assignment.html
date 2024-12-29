@@ -1,0 +1,234 @@
+<dtml-var simple_html_header>
+
+<h2 id="practical-stuff">Practical stuff</h2>
+<ul>
+  <li> <b>Due Date:</b> Sunday 5 January 2025, before 23:59 (Blackboard's clock).</li>
+  <li> <b>Team Size:</b> 2 (pair design/programming)!<br/>
+  <i>Note that as of the 2017-2018 Academic Year, each International student should team up with "local"
+    (i.e., whose Bachelor degree was obtained at the University of Antwerp).</i></li>
+  <li> <b>Submitting your solution:</b>
+    <ul>
+      <li>
+        <em>Only one</em> member of each team submits a full solution (<a href="#zip">ZIP file</a>). 
+      </li>
+      <li>
+        The other team member <em>must</em> submit a single (plain text or HTML) file containing <em>only</em> the names of both team members. This will allow us to put in grades for both team members in BlackBoard.
+      </li>
+    </ul>
+  </li>
+  <li> <b>Submission Medium:</b>
+    <a href="http://blackboard.uantwerpen.be">BlackBoard</a>.
+  </li>
+
+  <li> <b>Contact / TA:</b>
+      <a href="mailto:Joeri.Exelmans@uantwerpen.be">Joeri Exelmans</a>.
+  </li>
+</ul>
+
+<h2>Introduction</h2>
+<p>You will use (classic) DEVS to model a queueing and load balancing system for a set of waterway locks. A conceptual view of the system is shown here:</p>
+<img src="concept.svg"/>
+<p>Ships move in the direction of the arrows. A generator generates ships at pseudo-random time intervals, which are added to a queue. Whenever the queue has a ship available, and one of the locks has enough remaining capacity for that ship, the load balancer pulls a ship from the queue and sends it to that lock. A lock may fit more than one ship, so as long as it is not filled up to full capacity, it may wait for more ships to arrive before the lock doors close and the ships can pass through to the other side of the lock. At the end of the system, we have a Sink, where all ships are collected, so we can extract statistics to analyse performance.</p>
+
+<p>Ships can have different sizes. For simplicity, the size of a ship is a small integer (e.g., 1 or 2). Locks can have different capacities: for instance, a lock of capacity 3 will fit either:
+  <ul>
+    <li>3 ships of size 1</li>
+    <li>1 ship of size 2 + 1 ship of size 1</li>
+  </ul>
+</p>
+
+<h2>Specification</h2>
+
+<p>We now give an overview of the different DEVS components, and their behavior, and their parameters. Although many of the parameters are fixed, your solution must work with different parameters as well. In other words, don't hardcode the parameter values in your DEVS blocks!</p>
+
+<h3>Atomic DEVS blocks</h3>
+  <ul>
+    <li>Generator
+      <ul>
+        <li><b>seed (int)</b>: Seed for the random number generator.</li>
+        <li><b>gen_num (int)</b>: The number of ships to generate during a simulation run. This parameter is fixed at 500.</li>
+        <li><b>gen_rate (float)</b>: The average ship generation rate (in ships/second). This parameter is fixed at 1/60/4 = once every 4 minutes.</li>
+        <li><b>gen_types (list of int)</b>: The different ship sizes to generate, and their likelihood. This parameter is fixed at [1,1,2], meaning, we have ship sizes 1 and 2, and size 1 is twice as likely to be generated as 2 (sizes are uniformly sampled from this sequence)</li>
+      </ul>
+    </li>
+    <li>Queue
+      <ul>
+        <li><b>ship_sizes (set of int)</b>: The different ship sizes. We will use {1,2}. The Queue will internally create one FIFO queue per ship size. This makes it possible to give bigger ships a higher priority over smaller ships, or vice versa.</li>
+      </ul>
+    </li>
+    <li>Load Balancer
+      <ul>
+        <li><b>lock_capacities (list of int)</b>: The load balancer needs to know about the number of locks and their capacities. We will use [3,2], meaning two locks, of capacities 3 and 2.</li>
+        <li><b>priority (enum)</b>: Whether to give higher priority to bigger or smaller ships.</li>
+      </ul>
+      <p>Further, two different load balancer strategies will be implemented. Each strategy will be implemented as a separate Atomic DEVS block:</p>
+      <ul>
+        <li><b>RoundRobinLoadBalancer</b>: will iterate over the locks, and attempt to move a ship into each lock in a round-robin fashion. The priority-parameter is taken into account: if bigger ships have higher priority, then it will first try to move the biggest ship into the lock, then the next-biggest-ship, etc.
+          <p>TIP: This load balancer will need to remember (in its DEVS state) the lock into which a ship was moved most recently, so for the next ship, it will start with the lock after it.</p>
+          <p>Initially, the RoundRobinLoadBalancer must start with the first lock in the <b>lock_capacities</b>-list.</p>
+        </li>
+
+        <li><b>FillErUpLoadBalancer</b>: will prioritize, above all, a &quot;move&quot; that maximally fills up a lock.
+
+          <p>Example: if ships of sizes 1 and 2 are available, and the locks have remaining capacities 3 and 2, then the possible &quot;moves&quot; are:
+            <ul>
+              <li>move ship size 1 -> lock with cap 3 => remaining lock cap = 2</li>
+              <li>move ship size 1 -> lock with cap 2 => remaining lock cap = 1</li>
+              <li>move ship size 2 -> lock with cap 3 => remaining lock cap = 1</li>
+              <li>move ship size 2 -> lock with cap 2 => remaining lock cap = 0</li>
+            </ul>
+          this strategy will prioritize the last move, because it results in the smallest remaining capacity (in this case, completely filling up the lock).</p>
+
+          <p>NOTE: This load balancer also has too take into account the priority-parameter. For instance, if bigger ships are prioritized, and the following moves can be made:
+            <ul>
+              <li>move ship size 1 -> lock with cap 2 => remaining lock cap = 1</li>
+              <li>move ship size 1 -> lock with cap 1 => remaining lock cap = 0</li>
+              <li>move ship size 2 -> lock with cap 2 => remaining lock cap = 0</li>
+              <li>move ship size 2 -> lock with cap 1 => remaining lock cap = 1</li>
+            </ul>
+            this time, both 1->1 and 2->2 completely fill up the lock, but the move 2->2 will be chosen, because it involves a bigger ship.
+          </p>
+
+          <p>Finally, if the same ship can be moved to different locks with equal priority (filling both locks up equally), then the earliest lock in the <b>lock_capacities</b>-list is chosen.</p>
+
+        </li>
+      </ul>
+    </li>
+    <li>Lock
+      <ul>
+        <li><b>capacity (int)</b>: Capacity of the lock. E.g., 3 or 2.</li>
+        <li><b>passthrough_duration (float)</b>: Time duration (in seconds) of the &quot;passthrough&quot;-procedure. This procedure conceptually involves closing the lock doors, changing the water level, and opening the lock doors on the other side, and the ships leaving the lock. In our simulation, it is only an amount of time during which the lock has zero remaining capacity, after which the ships are sent to the sink.
+          <p>For simplicity, there is no time delay between sending the ships to the sink, and the lock becoming available again (at original capacity).</p>
+        <li><b>max_wait_duration (float)</b>: When a lock is completely filled up (zero remaining capacity), the &quot;passthrough&quot;-procedure starts immediately. The procedure may also start if the lock is non-empty, and a certain amount of time has passed since the <em>first</em> ship has entered the lock. This parameter is that amount of time.
+        </li>
+      </ul>
+    </li>
+  </ul>
+
+<p>The specification of the semantics of the Atomic DEVS blocks is entirely deterministic. If you implement everything correctly, the system as-a-whole will behave 100% identical to the teacher's solution.</p>
+
+<h3>Coupled DEVS</h3>
+<p>The system as a whole is modeled as a Coupled DEVS block. Its parameters are mostly passed as-is to the underlying Atomic DEVS blocks. They are:
+  <ul>
+    <li><b>gen_num (int)</b> -> Generator.</li>
+    <li><b>gen_rate (float)</b> -> Generator.</li>
+    <li><b>gen_types (list of int)</b> -> Generator and Queue. The Queue only needs this parameter to know the different ship sizes.</li>
+    <li><b>lock_capacities (list of int)</b> -> LoadBalancer and each Lock its respective capacity.</li>
+    <li><b>priority (enum)</b> -> LoadBalancer.</li>
+    <li><b>max_wait_duration (float)</b> -> each Lock (same value for all locks).</li>
+    <li><b>passthrough_duration (float)</b> -> each Lock (same value for all locks).</li>
+  </ul>
+</p>
+
+<h2>What is expected</h2>
+<p>First of all, you are <em>given</em> an implementation of the following AtomicDEVS blocks, which you must not edit:</p>
+<ul>
+  <li>Generator
+    <ul><li><b>out_ship (Ship)</b>: output port on which an event is sent when a ship is generated.</li></ul>
+  </li>
+  <li>Sink
+    <ul><li><b>in_ships (list of Ship)</b>: input port on which an event is sent when ships leave a lock. For each ship, the time duration spent in the system is computed and stored.</li></ul>
+  </li>
+</ul>
+<p>You will:</p>
+<ul>
+  <li>Implement the AtomicDEVS blocks for Queue, RoundRobinLoadBalancer, FillErUpLoadBalancer and Lock.</li>
+  <li>Think of the interfaces of these blocks (input/output ports and their events) and the protocol spoken by them.</li>
+  <li>Finally, in the CoupledDEVS block representing the entire system, you will have to make the right connections (which of course depends on the input/output ports that you have defined in your AtomicDEVS).</li>
+</ul>
+<p>An indication of the complexity: my own solution of the AtomicDEVS blocks is about 300 lines of code (including comments).</p>
+
+<h2 id="goal">Goal: Performance Analysis</h2>
+<p>Once you have implemented the system, we will do performance analysis, comparing combinations of the following parameter values:</p>
+<ul>
+  <li><b>max_wait_duration (float)</b>: we will try 0, 2, 4, 6, 8 minutes.</li>
+  <li><b>priority (enum)</b>: we will try giving priority to bigger and smaller ships.</li>
+  <li><b>strategy (enum)</b>: we will try &quot;round-robin&quot; and &quot;fill-er-up&quot;.</li>
+</ul>
+<p>More specifically, we would like to know under which (combinations of) parameter values the (avg/min/max) duration that ships spend in the system is minimized. Also, we'd like to know if one choice (e.g., prioritize bigger) always better than another choice (e.g., prioritize smaller), or does it depend on the choices made for the other parameters?</p>
+
+<h2 id="gettingstarted">Getting Started</h2>
+<ol>
+  <li>Clone the <tt>mosis24</tt> branch of <a href="https://msdl.uantwerpen.be/git/jexelmans/joeriPDEVS/src/mosis24">this git repository</a>.</li>
+  <li>Under the <tt>assignment</tt> directory, you'll find the following files:
+    <ul>
+      <li><tt>runner.py</tt> This script runs the simulation for all combinations of parameter values as described in the <a href="#goal">Performance Analysis</a> section. It will generate <tt>.csv</tt> files with the time durations that each ship has spent in the system. Every row is a ship (500 ships, so 500 rows total), and every column represents a different value for the <b>max_wait_duration</b> parameter. It will also generate a <tt>plot.gnuplot</tt> file, which you can run with gnuplot as follows:
+        <pre>gnuplot plot.gnuplot</pre>
+      which will result in a number of SVG files containing plots of the CSV files.
+
+      <p>You are only allowed to make temporary changes (for debugging) to this file.</p>
+      </li>
+      <li><tt>system.py</tt> Contains the full system, modeled as CoupledDEVS. You need to edit this file.</li>
+      <li><tt>atomicdevs.py</tt> Contains skeletons for the AtomicDEVS blocks that you must implement. You need to edit this file.</li>
+      <li><tt>environment.py</tt> Contains implementations of the Generator, Sink and Ship types. You must not edit this file.</li>
+    </ul>
+  </li>
+  <li>Write a report, where you:
+    <ul>
+      <li>explain and motivate the interfaces/protocol of the AtomicDEVS blocks</li>
+      <li>show the plotted results</li>
+      <li>interpret the plotted results</li>
+    </ul>
+  </li>
+  <li id="zip">Submit via BlackBoard, a ZIP file, containing:
+    <ul>
+      <li>Your code (only the <tt>assignment</tt> directory)</li>
+      <li>Your report (PDF)</li>
+      <li>The generated CSV- and SVG-files</li>
+    </ul>
+  </li>
+  <li>Deadline: Sunday 5 December 2025, 23:59</li>
+</ol>
+
+<h2 id="attention">Attention!</h2>
+<p>You <b><u><i>must</i></u></b> stick to the rules of DEVS:</p>
+<ul>
+  <li>The functions <tt>timeAdvance</tt> and <tt>outputFnc</tt> are purely <em>getters</em>! They must not mutate the DEVS state, or any variable, anywhere.</li>
+  <li>The functions <tt>extTransition</tt> and <tt>intTransition</tt> may mutate <em>ONLY</em> the DEVS state.</li>
+</ul>
+<p>Any violation of these rules results in an incorrect solution. Points will be subtracted.</p>
+
+<h2>Coding Conventions</h2>
+
+<p>Please follow these coding conventions:</p>
+<ul>
+  <li>Write your AtomicDEVS methods always in the following order:
+    <ul>
+      <li>extTransition</li>
+      <li>timeAdvance</li>
+      <li>outputFnc</li>
+      <li>intTransition</li>
+    </ul>
+
+    This reflects the order in which the methods are called by the simulator:
+    <ul>
+      <li>extTransition always has highest priority (can interrupt anything)</li>
+      <li>timeAdvance is called before outputFnc</li>
+      <li>outputFnc is called right before intTransition</li>
+    </ul>
+  </li>
+  <li>Input/output port attributes start with 'in_' and 'out_'</li>
+</ul>
+
+<h2>Tips</h2>
+<ul>
+  <li>Test/debug your integrated solution with only one ship (set <b>num_ships</b> parameter to 1).</li>
+  <li>To observe the changing State in the PyPDVES debug output, write <tt>__repr__</tt>-methods for your State-classes.</li>
+</ul>
+
+<h2>Troubleshooting</h2>
+
+<p>Common mistakes include:
+  <ul>
+    <li>did you forget to return <tt>self.state</tt> from intTransition or extTransition ?</li>
+    <li>did you accidentally write to <tt>self.x</tt> instead of <tt>self.state.x</tt> ?</li>
+    <li>did you modify the state in timeAdvance or outputFnc ? (<a href="#attention">NOT ALLOWED!!</a>)</li>
+  </ul>
+</p>
+
+<h2>Extra Material</h2>
+<ul>
+  <li>This assignment was inspired by the <a href="https://msdl.uantwerpen.be/git/jexelmans/joeriPDEVS/src/mosis24/examples/queueing">queueuing example</a>.</li>
+</ul>
+
+<dtml-var standard_html_footer>
