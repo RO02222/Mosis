@@ -30,8 +30,12 @@ class LockQueueingSystem(CoupledDEVS):
         ))
         self.connectPorts(generator.out_ship, queue.in_ship)
 
+        # STRATEGY_ROUND_ROBIN: "roundrobin"
+        # STRATEGY_FILL_ER_UP: "fillerup"
+        strat = {STRATEGY_ROUND_ROBIN: RoundRobinLoadBalancer,
+         STRATEGY_FILL_ER_UP: FillErUpLoadBalancer}[load_balancer_strategy]
 
-        Balancer = self.addSubModel(LoadBalancer(lock_capacities=lock_capacities,
+        Balancer = self.addSubModel(strat(lock_capacities=lock_capacities,
                                                  ship_sizes=set(gen_types), priority=priority))
         self.connectPorts(queue.out_ship_content, Balancer.in_update_queue)
         self.connectPorts(Balancer.out_update_ship, queue.in_update_ship)

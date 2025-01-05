@@ -22,7 +22,6 @@ class Queue(AtomicDEVS):
 
 
     def extTransition(self, inputs):
-        print(inputs)
         if self.in_ship in inputs:
             ship = inputs[self.in_ship]
             self.state.ship_queue[ship.size].append(ship)
@@ -56,8 +55,8 @@ class QueueState:
 
 
 class LoadBalancer(AtomicDEVS):
-    def __init__(self, lock_capacities=[3,2], *, ship_sizes, priority): # two locks of capacities 3 and 2.
-        super().__init__("LoadBalancer") #RoundRobin
+    def __init__(self, name, lock_capacities=[3,2], *, ship_sizes, priority): # two locks of capacities 3 and 2.
+        super().__init__(name) #RoundRobin
         self.state = LoadBalancerState(lock_capacities, ship_sizes, priority)
         self.in_update_queue = self.addInPort("in_update_queue")
         self.in_update_lock = self.addInPort("in_update_lock")
@@ -65,7 +64,6 @@ class LoadBalancer(AtomicDEVS):
         self.out_update_lock = [self.addOutPort("out_update_lock") for _ in range(len(lock_capacities))]
 
     def extTransition(self, inputs):
-        print(inputs)
         if self.in_update_queue in inputs:
             for size, ship in inputs[self.in_update_queue].items():
                 self.state.queueContent[size] = ship
@@ -94,7 +92,7 @@ class LoadBalancer(AtomicDEVS):
                 return {self.out_update_ship: self.state.data}
 
 
-        ship = self.fill_lock2()
+        ship = self.fill_lock()
         if ship[0] != -1:
             return {self.out_update_lock[ship[0]]: self.state.queueContent[ship[1]]}
         return {}
@@ -108,6 +106,34 @@ class LoadBalancer(AtomicDEVS):
 
     def available_locks(self):
         return (i for i, value in enumerate(self.state.locks_status) if value != 0)
+
+    def fill_lock(self):
+        return
+        
+
+
+class LoadBalancerState:
+    def __init__(self, lock_capacities, ship_sizes: set[int], priority):
+        self.remaining_time = float("inf")
+        self.locks_cap = copy(lock_capacities)
+        self.locks_status = copy(lock_capacities)
+        self.queueContent = {size: 0 for size in ship_sizes}
+        self.ship_sizes = [size for size in ship_sizes]
+        self.ship_sizes.sort(reverse=not priority)
+        self.lastlock = 0
+        self.data = None
+        self.state = 0
+
+    def __repr__(self):
+        return f"{self.remaining_time}\n"\
+               f"{self.locks_status} / {self.locks_cap}\n"\
+                f"{self.queueContent}"
+
+
+class FillErUpLoadBalancer(LoadBalancer):
+    def __init__(self, lock_capacities=[3, 2], *, ship_sizes, priority):  # two locks of capacities 3 and 2.
+        super().__init__("FillErUpLoadBalancer", lock_capacities, ship_sizes=ship_sizes, priority=priority)  # RoundRobin
+
 
     def fill_lock(self):
         best = [-1,-1,float("inf")]
@@ -127,13 +153,14 @@ class LoadBalancer(AtomicDEVS):
                     best[1] = shipSize
                     best[2] = remaining
         return best
-    
-    def fill_lock2(self):
+
+class RoundRobinLoadBalancer(LoadBalancer):
+    def __init__(self, lock_capacities=[3,2], *, ship_sizes, priority): # two locks of capacities 3 and 2.
+        super().__init__("RoundRobinLoadBalancer", lock_capacities, ship_sizes=ship_sizes, priority=priority) #RoundRobin
+
+    def fill_lock(self):
         num_locks = len(self.state.locks_status)
-        if self.state.lastlock is None:
-            start_lock = 0
-        else:
-            start_lock = (self.state.lastlock + 1) % num_locks
+        start_lock = (self.state.lastlock + 1) % num_locks
 
         for shipSize in self.state.ship_sizes:
             if self.state.queueContent[shipSize] is None:
@@ -145,27 +172,6 @@ class LoadBalancer(AtomicDEVS):
                 if lock_capacity >= shipSize:
                     return [lock_index, shipSize, lock_capacity - shipSize]
         return [-1, -1, float("inf")]
-        
-
-
-class LoadBalancerState:
-    def __init__(self, lock_capacities, ship_sizes: set[int], priority):
-        self.remaining_time = float("inf")
-        self.locks_cap = copy(lock_capacities)
-        self.locks_status = copy(lock_capacities)
-        self.queueContent = {size: 0 for size in ship_sizes}
-        self.ship_sizes = [size for size in ship_sizes]
-        reverse = not bool(priority)
-        self.ship_sizes.sort(reverse=reverse)
-        self.lastlock = None
-        self.data = None
-        self.state = 0
-
-    def __repr__(self):
-        return f"{self.remaining_time}\n"\
-               f"{self.locks_status} / {self.locks_cap}\n"\
-                f"{self.queueContent}"
-
 
 
 class Lock(AtomicDEVS):
@@ -183,7 +189,6 @@ class Lock(AtomicDEVS):
 
 
     def extTransition(self, inputs):
-        print(inputs)
         self.state.remaining_time_event -= self.elapsed
         if self.in_lock in inputs:
             if self.state.state == 0:
