@@ -32,7 +32,7 @@ class LockQueueingSystem(CoupledDEVS):
 
 
         Balancer = self.addSubModel(LoadBalancer(lock_capacities=lock_capacities,
-                                                 ship_sizes=set(gen_types)))
+                                                 ship_sizes=set(gen_types), priority=priority))
         self.connectPorts(queue.out_ship_content, Balancer.in_update_queue)
         self.connectPorts(Balancer.out_update_ship, queue.in_update_ship)
 

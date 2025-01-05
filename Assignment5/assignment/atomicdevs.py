@@ -56,9 +56,9 @@ class QueueState:
 
 
 class LoadBalancer(AtomicDEVS):
-    def __init__(self, lock_capacities=[3,2], *, ship_sizes): # two locks of capacities 3 and 2.
+    def __init__(self, lock_capacities=[3,2], *, ship_sizes, priority): # two locks of capacities 3 and 2.
         super().__init__("LoadBalancer") #RoundRobin
-        self.state = LoadBalancerState(lock_capacities, ship_sizes)
+        self.state = LoadBalancerState(lock_capacities, ship_sizes, priority)
         self.in_update_queue = self.addInPort("in_update_queue")
         self.in_update_lock = self.addInPort("in_update_lock")
         self.out_update_ship = self.addOutPort("out_update_ship")
@@ -72,6 +72,7 @@ class LoadBalancer(AtomicDEVS):
             self.state.state = 0
         elif self.in_update_lock in inputs:
             index, self.state.data, capacity = inputs[self.in_update_lock]
+            self.state.lastlock = index
             self.state.locks_status[index] = capacity
             self.state.state = 1
 
@@ -93,7 +94,7 @@ class LoadBalancer(AtomicDEVS):
                 return {self.out_update_ship: self.state.data}
 
 
-        ship = self.fill_lock()
+        ship = self.fill_lock2()
         if ship[0] != -1:
             return {self.out_update_lock[ship[0]]: self.state.queueContent[ship[1]]}
         return {}
@@ -126,17 +127,37 @@ class LoadBalancer(AtomicDEVS):
                     best[1] = shipSize
                     best[2] = remaining
         return best
+    
+    def fill_lock2(self):
+        num_locks = len(self.state.locks_status)
+        if self.state.lastlock is None:
+            start_lock = 0
+        else:
+            start_lock = (self.state.lastlock + 1) % num_locks
+
+        for shipSize in self.state.ship_sizes:
+            if self.state.queueContent[shipSize] is None:
+                continue
+
+            for offset in range(num_locks):
+                lock_index = (start_lock + offset) % num_locks
+                lock_capacity = self.state.locks_status[lock_index]
+                if lock_capacity >= shipSize:
+                    return [lock_index, shipSize, lock_capacity - shipSize]
+        return [-1, -1, float("inf")]
+        
 
 
 class LoadBalancerState:
-    def __init__(self, lock_capacities, ship_sizes: set[int]):
+    def __init__(self, lock_capacities, ship_sizes: set[int], priority):
         self.remaining_time = float("inf")
         self.locks_cap = copy(lock_capacities)
         self.locks_status = copy(lock_capacities)
         self.queueContent = {size: 0 for size in ship_sizes}
         self.ship_sizes = [size for size in ship_sizes]
-        self.ship_sizes.sort(reverse=False)
-
+        reverse = not bool(priority)
+        self.ship_sizes.sort(reverse=reverse)
+        self.lastlock = None
         self.data = None
         self.state = 0
 
