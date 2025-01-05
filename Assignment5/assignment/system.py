@@ -33,20 +33,23 @@ class LockQueueingSystem(CoupledDEVS):
 
         Balancer = self.addSubModel(LoadBalancer(lock_capacities=lock_capacities,
                                                  ship_sizes=set(gen_types)))
-        self.connectPorts(queue.out_ship, Balancer.ship_update)
-        self.connectPorts(Balancer.request_ship, queue.request_ship)
+        self.connectPorts(queue.out_ship_content, Balancer.in_update_queue)
+        self.connectPorts(Balancer.out_update_ship, queue.in_update_ship)
 
+        self.sink = self.addSubModel(Sink())
 
         for i, lock_capacity in enumerate(lock_capacities):
-            lock = self.addSubModel(Lock(capacity=lock_capacity,
+            lock = self.addSubModel(Lock(index=i,
+                                        capacity=lock_capacity,
                                         max_wait_duration=max_wait_duration,
                                         passthrough_duration=passthrough_duration))
-            self.connectPorts(Balancer.update_lock[i], lock.in_lock)
+            self.connectPorts(Balancer.out_update_lock[i], lock.in_lock)
+            self.connectPorts(lock.out_update_capacity, Balancer.in_update_lock)
+
+            self.connectPorts(lock.out_sink, self.sink.in_ships)
 
 
 
-
-        sink = self.addSubModel(Sink())
         # # Don't forget to connect the input/output ports of the different sub-models:
         # #   for instance:
         # #     self.connectPorts(generator.out_ship, queue.in_ship)
@@ -54,5 +57,4 @@ class LockQueueingSystem(CoupledDEVS):
         # # Our runner.py script needs access to the 'sink'-state after completing the simulation:
 
 
-        self.sink = sink
 ### EDIT THIS FILE ###
